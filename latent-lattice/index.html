@@ -1,0 +1,550 @@
+<title>Latent Lattice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: lab instrument. Header strip with the precision dial, two scopes side by side (network | hyperspace), readout row of histogram + gauges below. Single dark look by choice. */
+:root {
+  --ink: #0a0e19;
+  --panel: #10172a;
+  --line: #1f2b45;
+  --fg: #e4eaf6;
+  --muted: #8592ad;
+  --pos: #ffb547;
+  --neg: #5cc6ff;
+  --err: #ff5d8f;
+  --display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { background: var(--ink); color: var(--fg); }
+body { font-family: var(--body); font-size: 15px; line-height: 1.5; }
+.wrap {
+  max-width: 1280px; margin: 0 auto;
+  padding-block: 28px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 20px;
+}
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 18px 32px; }
+.title { min-width: 0; max-width: 60ch; }
+.eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(32px, 5vw, 52px); line-height: 1; margin: 0 0 10px; letter-spacing: .01em; text-wrap: balance; }
+h1 span { color: var(--pos); }
+.lede { margin: 0; color: var(--muted); max-width: 58ch; }
+.controls { display: grid; gap: 10px; justify-items: start; }
+.seg { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--panel); }
+.seg button {
+  font: 600 13px/1 var(--mono); letter-spacing: .04em; color: var(--muted);
+  background: transparent; border: 0; border-right: 1px solid var(--line);
+  padding: 11px 14px; cursor: pointer; transition: color .2s, background .2s;
+}
+.seg button:last-child { border-right: 0; }
+.seg button:hover { color: var(--fg); }
+.seg button[aria-checked="true"] { color: var(--ink); background: var(--pos); }
+.seg button:focus-visible, .chip:focus-visible, input[type=range]:focus-visible { outline: 2px solid var(--neg); outline-offset: 2px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.chip {
+  font: 500 12px/1 var(--mono); color: var(--fg); background: transparent;
+  border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px; cursor: pointer;
+  display: inline-flex; gap: 8px; align-items: center;
+}
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+.chip[aria-pressed="true"] .dot { background: var(--pos); box-shadow: 0 0 8px var(--pos); }
+.hint { font: 12px var(--mono); color: var(--muted); }
+
+.scopes { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 20px; }
+.scope { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto; min-width: 0; overflow: hidden; }
+.scope-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.scope-head h2 { font: 600 15px/1.2 var(--display); letter-spacing: .06em; text-transform: uppercase; margin: 0; }
+.scope-head .meta { font: 12px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.stage { position: relative; min-height: 0; }
+canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+.net .stage { aspect-ratio: 16 / 10; }
+.dim .stage { aspect-ratio: 1 / 1; max-height: 560px; }
+.cap { margin: 0; padding: 10px 16px 14px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); display: grid; gap: 10px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 12px var(--mono); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.slider { display: flex; align-items: center; gap: 12px; font: 12px var(--mono); color: var(--fg); }
+.slider input { flex: 1; accent-color: var(--pos); min-width: 0; }
+.slider output { min-width: 3ch; text-align: right; font-variant-numeric: tabular-nums; }
+
+.readout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 20px; }
+.hist .stage { aspect-ratio: 16 / 6; }
+.gauges { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; align-content: start; }
+.g { background: var(--panel); padding: 14px 16px; display: grid; gap: 4px; }
+.g .k { font: 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.g .v { font: 600 26px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.g .s { font: 12px var(--mono); color: var(--muted); }
+.g.wide { grid-column: 1 / -1; }
+.bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.bar b { display: block; height: 100%; background: linear-gradient(90deg, var(--neg), var(--pos)); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+.formula { font: 12px/1.6 var(--mono); color: var(--muted); }
+.formula em { color: var(--fg); font-style: normal; }
+
+@media (max-width: 860px) {
+  .scopes, .readout { grid-template-columns: minmax(0, 1fr); }
+  .net .stage { aspect-ratio: 4 / 3.4; }
+  .hist .stage { aspect-ratio: 16 / 8; }
+}
+@media (max-width: 420px) {
+  .seg button { padding: 10px 10px; font-size: 12px; }
+  .g .v { font-size: 22px; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="title">
+      <p class="eyebrow">Neural net · N-dimensional space · weight quantization</p>
+      <h1>Latent <span>Lattice</span></h1>
+      <p class="lede">A small network and its embedding space, squeezed from 32-bit floats down to a single bit. Watch the weights snap to a grid, the neurons drift, and every embedding fall onto a corner of the hypercube.</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="radiogroup" aria-label="Weight precision" id="prec"></div>
+      <div class="row">
+        <button class="chip" id="auto" aria-pressed="true"><span class="dot"></span>Auto-cycle</button>
+        <span class="hint">keys 1–5 · ←/→ dims</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="scopes">
+    <section class="scope net" aria-label="Forward pass">
+      <div class="scope-head"><h2>Forward pass</h2><span class="meta" id="netMeta">5 → 9 → 12 → 9 → 3 · 288 weights</span></div>
+      <div class="stage"><canvas id="net"></canvas></div>
+      <div class="cap">
+        <div class="legend">
+          <span><i style="background:var(--pos)"></i>positive</span>
+          <span><i style="background:var(--neg)"></i>negative</span>
+          <span><i style="background:var(--err)"></i>drift from FP32</span>
+          <span><i style="background:transparent;border:1px solid var(--fg)"></i>FP32 output (ghost)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="scope dim" aria-label="Embedding hyperspace">
+      <div class="scope-head"><h2>Hyperspace</h2><span class="meta" id="dimMeta"></span></div>
+      <div class="stage"><canvas id="dim"></canvas></div>
+      <div class="cap">
+        <label class="slider" for="dims">Dimensions <input id="dims" type="range" min="3" max="8" step="1" value="5"><output id="dimsOut">5</output></label>
+        <span id="dimCap"></span>
+      </div>
+    </section>
+  </main>
+
+  <section class="readout">
+    <section class="scope hist" aria-label="Weight histogram">
+      <div class="scope-head"><h2>Weight tensor</h2><span class="meta" id="histMeta">4,096 weights · σ ≈ 0.02 · with outliers</span></div>
+      <div class="stage"><canvas id="hist"></canvas></div>
+      <div class="cap"><div class="formula">q = clamp(round(<em>w</em> / Δ), −q<sub>max</sub>, q<sub>max</sub>) · Δ &nbsp;&nbsp; Δ = max|w| / (2<sup>b−1</sup> − 1) &nbsp;&nbsp; 1-bit: q = sign(<em>w</em>) · mean|w|</div></div>
+    </section>
+    <div class="gauges" aria-live="polite">
+      <div class="g"><span class="k">Bits / weight</span><span class="v" id="gBits">32</span><span class="s" id="gLevels">≈4.3 billion levels</span></div>
+      <div class="g"><span class="k">Step Δ</span><span class="v" id="gStep">—</span><span class="s">gap between grid levels</span></div>
+      <div class="g"><span class="k">SQNR</span><span class="v" id="gSqnr">∞</span><span class="s" id="gMse">MSE 0</span></div>
+      <div class="g"><span class="k">Output drift</span><span class="v" id="gDrift">0.000</span><span class="s">mean |y<sub>q</sub> − y<sub>fp32</sub>|, live</span></div>
+      <div class="g wide"><span class="k">7B-parameter model in memory</span><span class="v" id="gMem">28.0 GB</span><div class="bar"><b id="gMemBar" style="width:100%"></b></div><span class="s" id="gMemS">full precision baseline</span></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const css = getComputedStyle(document.documentElement);
+  const C = k => css.getPropertyValue(k).trim();
+  const COL = { ink: C('--ink'), panel: C('--panel'), line: C('--line'), fg: C('--fg'), muted: C('--muted'), pos: C('--pos'), neg: C('--neg'), err: C('--err') };
+  const MONO = '11px ' + C('--mono');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const PREC = [
+    { k: 'FP32', b: 32 }, { k: 'INT8', b: 8 }, { k: 'INT4', b: 4 }, { k: 'INT2', b: 2 }, { k: '1-BIT', b: 1 }
+  ];
+  let pi = 0, auto = !reduce, autoT = 0;
+  const AUTO_EVERY = 3.6;
+
+  // deterministic RNG for the model's weights
+  let seed = 20261117;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const gauss = () => { let u = 0; while (!u) u = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd()); };
+
+  function quant(v, b, R, alpha) {
+    if (b >= 16) return v;
+    if (b === 1) return v >= 0 ? alpha : -alpha;
+    const q = (1 << (b - 1)) - 1, s = R / q;
+    const n = Math.max(-q, Math.min(q, Math.round(v / s)));
+    return n * s;
+  }
+  const hex2rgb = h => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const RGB = { pos: hex2rgb(COL.pos), neg: hex2rgb(COL.neg), err: hex2rgb(COL.err), fg: hex2rgb(COL.fg), muted: hex2rgb(COL.muted) };
+  const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, Math.min(1, a)).toFixed(3)})`;
+
+  // ---------- network ----------
+  const LAYERS = [5, 9, 12, 9, 3];
+  const W = [], Wt = [], Wd = [], Bias = [], RL = [], AL = [];
+  for (let l = 0; l < LAYERS.length - 1; l++) {
+    const nin = LAYERS[l], nout = LAYERS[l + 1];
+    W[l] = []; Wt[l] = []; Wd[l] = []; Bias[l] = [];
+    let mx = 0, sa = 0;
+    for (let j = 0; j < nout; j++) {
+      W[l][j] = []; Bias[l][j] = gauss() * 0.15;
+      for (let i = 0; i < nin; i++) {
+        const w = gauss() * 1.7 / Math.sqrt(nin);
+        W[l][j][i] = w; mx = Math.max(mx, Math.abs(w)); sa += Math.abs(w);
+      }
+      Wt[l][j] = W[l][j].slice(); Wd[l][j] = W[l][j].slice();
+    }
+    RL[l] = mx; AL[l] = sa / (nin * nout);
+  }
+  function setNetTargets() {
+    const b = PREC[pi].b;
+    for (let l = 0; l < W.length; l++)
+      for (let j = 0; j < W[l].length; j++)
+        for (let i = 0; i < W[l][j].length; i++) Wt[l][j][i] = quant(W[l][j][i], b, RL[l], AL[l]);
+  }
+  function forward(M, x) {
+    const acts = [x];
+    let a = x;
+    for (let l = 0; l < M.length; l++) {
+      const out = [];
+      for (let j = 0; j < M[l].length; j++) {
+        let s = Bias[l][j];
+        for (let i = 0; i < a.length; i++) s += M[l][j][i] * a[i];
+        out.push(Math.tanh(s));
+      }
+      acts.push(out); a = out;
+    }
+    return acts;
+  }
+
+  // ---------- weight tensor for histogram ----------
+  const T = new Float32Array(4096);
+  for (let i = 0; i < T.length; i++) T[i] = gauss() * 0.02 * (rnd() < 0.02 ? 3.2 : 1);
+  let TR = 0, TA = 0, Tvar = 0;
+  for (const v of T) { TR = Math.max(TR, Math.abs(v)); TA += Math.abs(v); Tvar += v * v; }
+  TA /= T.length; Tvar /= T.length;
+  let levels = [], levelDisp = [], tStats = {};
+  function computeTensor() {
+    const b = PREC[pi].b;
+    let mse = 0; const counts = new Map();
+    for (const v of T) {
+      const q = quant(v, b, TR, TA);
+      mse += (q - v) ** 2;
+      if (b < 16) { const key = q.toFixed(7); counts.set(key, (counts.get(key) || 0) + 1); }
+    }
+    mse /= T.length;
+    levels = [...counts.entries()].map(([k, c]) => ({ x: +k, c }));
+    tStats = { mse, sqnr: mse > 0 ? 10 * Math.log10(Tvar / mse) : Infinity, step: b >= 16 ? null : b === 1 ? 2 * TA : TR / ((1 << (b - 1)) - 1) };
+  }
+
+  // ---------- hyperspace ----------
+  const A = 0.72;           // hypercube half-size == 1-bit alpha
+  const RE = 1.0;           // embedding clip range for INT-b grids
+  const NPTS = 150, MAXN = 8;
+  const P8 = [];
+  for (let p = 0; p < NPTS; p++) { const v = []; for (let d = 0; d < MAXN; d++) v.push(gauss() * 0.42); P8.push(v); }
+  let N = 5, verts = [], edges = [], ptsT = [], ptsD = [], planes = [];
+  function buildSpace() {
+    verts = []; edges = [];
+    for (let m = 0; m < (1 << N); m++) {
+      const v = []; for (let d = 0; d < N; d++) v.push((m >> d) & 1 ? A : -A);
+      verts.push(v);
+      for (let d = 0; d < N; d++) if (!((m >> d) & 1)) edges.push([m, m | (1 << d)]);
+    }
+    planes = [];
+    for (let k = 0; k < N; k++) planes.push([k, (k + 1) % N, 0.11 + 0.047 * k * (k % 2 ? -1 : 1)]);
+    planes.push([0, Math.min(2, N - 1), 0.07]);
+    ptsD = P8.map(v => v.slice(0, N));
+    setPtsTargets(true);
+    $('#dimsOut').textContent = N;
+    updateDimText();
+  }
+  function setPtsTargets(snap) {
+    const b = PREC[pi].b;
+    ptsT = P8.map(v => v.slice(0, N).map(x => quant(x, b, RE, A)));
+    if (snap) ptsD = ptsT.map(v => v.slice());
+  }
+  function updateDimText() {
+    const b = PREC[pi].b;
+    $('#dimMeta').textContent = `N = ${N} · ${(1 << N).toLocaleString()} vertices · ${(N * (1 << (N - 1))).toLocaleString()} edges`;
+    const cap = $('#dimCap');
+    if (b >= 16) cap.textContent = `${NPTS} embeddings float freely in ${N}-D space, projected to 2-D while it rotates through ${planes.length} planes.`;
+    else if (b === 1) cap.textContent = `1-bit: each coordinate keeps only its sign, so every embedding lands on a corner of the ${N}-cube. It is now a ${N}-bit code.`;
+    else { const L = 2 * ((1 << (b - 1)) - 1) + 1; cap.textContent = `${PREC[pi].k}: each axis allows ${L} values, so space becomes a ${L}^${N} lattice. Pink lines show how far each point was pushed.`; }
+  }
+
+  // ---------- canvases ----------
+  const $ = s => document.querySelector(s);
+  const views = {};
+  function fit(id) {
+    const c = document.getElementById(id);
+    const r = c.getBoundingClientRect();
+    const d = Math.min(2, window.devicePixelRatio || 1);
+    c.width = Math.max(1, Math.round(r.width * d)); c.height = Math.max(1, Math.round(r.height * d));
+    const g = c.getContext('2d'); g.setTransform(d, 0, 0, d, 0, 0);
+    views[id] = { c, g, w: r.width, h: r.height };
+    if (id === 'net') layoutNet();
+  }
+  let nodes = [];
+  function layoutNet() {
+    const { w, h } = views.net;
+    const padL = 34, padR = Math.min(110, w * 0.2), padT = 22, padB = 30;
+    nodes = LAYERS.map((n, l) => {
+      const x = padL + (w - padL - padR) * l / (LAYERS.length - 1);
+      const span = (h - padT - padB) * Math.min(1, n / 12);
+      return Array.from({ length: n }, (_, i) => ({ x, y: padT + (h - padT - padB) / 2 - span / 2 + (n === 1 ? span / 2 : span * i / (n - 1)) }));
+    });
+  }
+  const ro = new ResizeObserver(entries => { for (const e of entries) fit(e.target.querySelector('canvas').id); });
+  document.querySelectorAll('.stage').forEach(s => ro.observe(s));
+  ['net', 'dim', 'hist'].forEach(fit);
+
+  // ---------- UI ----------
+  const segBox = $('#prec');
+  PREC.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('role', 'radio'); b.id = 'prec-' + p.k; b.textContent = p.k;
+    b.addEventListener('click', () => { setAuto(false); setPrec(i); });
+    segBox.appendChild(b);
+  });
+  const autoBtn = $('#auto');
+  function setAuto(v) { auto = v; autoT = 0; autoBtn.setAttribute('aria-pressed', v); }
+  autoBtn.addEventListener('click', () => setAuto(!auto));
+  const dimInput = $('#dims');
+  dimInput.addEventListener('input', () => { N = +dimInput.value; buildSpace(); });
+  addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key >= '1' && e.key <= '5') { setAuto(false); setPrec(+e.key - 1); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      N = Math.max(3, Math.min(8, N + (e.key === 'ArrowRight' ? 1 : -1)));
+      dimInput.value = N; buildSpace();
+    }
+  });
+
+  const fmtGB = bytes => bytes >= 1e9 ? (bytes / 1e9).toFixed(bytes >= 1e10 ? 1 : 2) + ' GB' : (bytes / 1e6).toFixed(0) + ' MB';
+  function setPrec(i) {
+    pi = i;
+    segBox.querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-checked', j === i));
+    setNetTargets(); setPtsTargets(false); computeTensor(); updateDimText();
+    const b = PREC[i].b;
+    $('#gBits').textContent = b;
+    $('#gLevels').textContent = b >= 16 ? '≈4.3 billion levels' : b === 1 ? '2 levels: ±mean|w|' : `${2 * ((1 << (b - 1)) - 1) + 1} levels used (symmetric)`;
+    $('#gStep').textContent = tStats.step == null ? '—' : tStats.step.toFixed(4);
+    $('#gSqnr').textContent = isFinite(tStats.sqnr) ? tStats.sqnr.toFixed(1) + ' dB' : '∞';
+    $('#gMse').textContent = 'MSE ' + (tStats.mse ? tStats.mse.toExponential(2) : '0');
+    const bytes = 7e9 * b / 8;
+    $('#gMem').textContent = fmtGB(bytes);
+    $('#gMemBar').style.width = (b / 32 * 100).toFixed(2) + '%';
+    $('#gMemS').textContent = b >= 16 ? 'full precision baseline' : `${(32 / b).toFixed(0)}× smaller than FP32`;
+  }
+
+  // ---------- particles ----------
+  const parts = [];
+  let driftAvg = 0;
+
+  // ---------- draw: network ----------
+  function drawNet(t, dt, accFp, accQ) {
+    const { g, w, h } = views.net; if (!w) return;
+    g.clearRect(0, 0, w, h);
+    const r = Math.max(5, Math.min(10, Math.min(w, h) / 42));
+    // edges
+    for (let l = 0; l < Wd.length; l++) {
+      const R = RL[l];
+      for (let j = 0; j < Wd[l].length; j++) for (let i = 0; i < Wd[l][j].length; i++) {
+        const v = Wd[l][j][i], a = nodes[l][i], bnode = nodes[l + 1][j];
+        const m = Math.abs(v) / R;
+        g.strokeStyle = rgba(v >= 0 ? RGB.pos : RGB.neg, 0.05 + m * 0.32);
+        g.lineWidth = 0.4 + m * 1.8;
+        g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(bnode.x, bnode.y); g.stroke();
+      }
+    }
+    // spawn particles
+    if (!reduce) {
+      for (let l = 0; l < Wd.length; l++) for (let j = 0; j < Wd[l].length; j++) for (let i = 0; i < Wd[l][j].length; i++) {
+        const s = Wd[l][j][i] * accQ[l][i];
+        if (parts.length < 700 && Math.random() < dt * 2.2 * Math.abs(s)) parts.push({ l, i, j, t: 0, sp: 0.9 + Math.random() * 0.6, pos: s >= 0, m: Math.min(1, Math.abs(s) * 1.4) });
+      }
+      g.globalCompositeOperation = 'lighter';
+      for (let k = parts.length - 1; k >= 0; k--) {
+        const p = parts[k]; p.t += dt * p.sp;
+        if (p.t >= 1) { parts.splice(k, 1); continue; }
+        const a = nodes[p.l][p.i], b = nodes[p.l + 1][p.j];
+        const e = p.t * p.t * (3 - 2 * p.t);
+        const x = a.x + (b.x - a.x) * e, y = a.y + (b.y - a.y) * e;
+        const c = p.pos ? RGB.pos : RGB.neg;
+        g.fillStyle = rgba(c, 0.25 * p.m); g.beginPath(); g.arc(x, y, 4 + 3 * p.m, 0, 7); g.fill();
+        g.fillStyle = rgba(c, 0.9); g.beginPath(); g.arc(x, y, 1.3 + p.m, 0, 7); g.fill();
+      }
+      g.globalCompositeOperation = 'source-over';
+    }
+    // nodes
+    for (let l = 0; l < nodes.length; l++) for (let i = 0; i < nodes[l].length; i++) {
+      const { x, y } = nodes[l][i];
+      const a = accQ[l][i], af = accFp[l][i];
+      const c = a >= 0 ? RGB.pos : RGB.neg;
+      g.shadowColor = rgba(c, 0.9); g.shadowBlur = 18 * Math.abs(a);
+      g.fillStyle = COL.panel; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill();
+      g.shadowBlur = 0;
+      g.fillStyle = rgba(c, 0.15 + 0.85 * Math.abs(a)); g.beginPath(); g.arc(x, y, r, 0, 7); g.fill();
+      g.strokeStyle = rgba(RGB.fg, 0.35); g.lineWidth = 1; g.stroke();
+      const drift = Math.abs(a - af);
+      if (l > 0 && drift > 0.004) {
+        g.strokeStyle = rgba(RGB.err, 0.95); g.lineWidth = 2.2;
+        g.beginPath(); g.arc(x, y, r + 4, -Math.PI / 2, -Math.PI / 2 + Math.min(2 * Math.PI, drift * 2 * Math.PI * 1.6)); g.stroke();
+      }
+    }
+    // labels
+    g.font = MONO; g.fillStyle = COL.muted; g.textAlign = 'center';
+    const names = ['input', 'hidden 1', 'hidden 2', 'hidden 3', 'output'];
+    nodes.forEach((col, l) => g.fillText(names[l], col[0].x, h - 10));
+    g.textAlign = 'right';
+    nodes[0].forEach((n, i) => g.fillText('x' + (i + 1), n.x - r - 6, n.y + 4));
+    // output bars
+    const bx = nodes[nodes.length - 1][0].x + r + 12, bw = Math.max(30, w - bx - 14);
+    const mid = bx + bw / 2;
+    nodes[nodes.length - 1].forEach((n, j) => {
+      const aq = accQ[accQ.length - 1][j], af = accFp[accFp.length - 1][j];
+      g.fillStyle = rgba(RGB.muted, 0.25); g.fillRect(bx, n.y - 0.5, bw, 1);
+      g.fillStyle = rgba(aq >= 0 ? RGB.pos : RGB.neg, 0.85);
+      g.fillRect(Math.min(mid, mid + aq * bw / 2), n.y - 5, Math.abs(aq) * bw / 2, 10);
+      g.strokeStyle = rgba(RGB.fg, 0.9); g.lineWidth = 1;
+      g.strokeRect(Math.min(mid, mid + af * bw / 2) + 0.5, n.y - 8.5, Math.abs(af) * bw / 2, 17);
+      g.fillStyle = COL.muted; g.textAlign = 'left'; g.fillText('y' + (j + 1), bx, n.y - 13);
+    });
+    g.fillStyle = rgba(RGB.muted, 0.6); g.fillRect(mid, nodes[nodes.length - 1][0].y - 18, 1, nodes[nodes.length - 1].at(-1).y - nodes[nodes.length - 1][0].y + 32);
+  }
+
+  // ---------- draw: hyperspace ----------
+  const rot = new Float64Array(16 * 2);
+  function rotate(v, cs) {
+    const o = v.slice();
+    for (let k = 0; k < planes.length; k++) {
+      const [i, j] = planes[k], c = cs[2 * k], s = cs[2 * k + 1];
+      const a = o[i], b = o[j]; o[i] = a * c - b * s; o[j] = a * s + b * c;
+    }
+    return o;
+  }
+  function project(v, sc, cx, cy) {
+    let x = 0, y = 0, z = 0;
+    for (let d = 0; d < N; d++) { const th = d * Math.PI / N; x += v[d] * Math.cos(th); y += v[d] * Math.sin(th); z += v[d] * Math.cos(2 * th + 0.9); }
+    return [cx + x * sc, cy + y * sc, z];
+  }
+  function drawDim(t) {
+    const { g, w, h } = views.dim; if (!w) return;
+    g.clearRect(0, 0, w, h);
+    for (let k = 0; k < planes.length; k++) { const a = t * planes[k][2]; rot[2 * k] = Math.cos(a); rot[2 * k + 1] = Math.sin(a); }
+    const sc = Math.min(w, h) * 0.46 / (A * N / Math.SQRT2 * 0.82);
+    const cx = w / 2, cy = h / 2;
+    const zr = A * Math.sqrt(N);
+    const V = verts.map(v => project(rotate(v, rot), sc, cx, cy));
+    // edges
+    g.lineWidth = 1;
+    for (const [a, b] of edges) {
+      const z = (V[a][2] + V[b][2]) / 2 / zr;
+      g.strokeStyle = rgba(RGB.muted, 0.10 + 0.22 * (z + 1) / 2);
+      g.beginPath(); g.moveTo(V[a][0], V[a][1]); g.lineTo(V[b][0], V[b][1]); g.stroke();
+    }
+    // occupancy for 1-bit
+    const b = PREC[pi].b, occ = new Uint16Array(1 << N);
+    if (b === 1) for (const v of ptsT) { let m = 0; for (let d = 0; d < N; d++) if (v[d] > 0) m |= 1 << d; occ[m]++; }
+    for (let m = 0; m < V.length; m++) {
+      const [x, y, z] = V[m];
+      if (occ[m]) {
+        g.fillStyle = rgba(RGB.pos, 0.18); g.beginPath(); g.arc(x, y, 6 + occ[m] * 1.6, 0, 7); g.fill();
+        g.fillStyle = COL.pos; g.beginPath(); g.arc(x, y, 2.6, 0, 7); g.fill();
+      } else {
+        g.fillStyle = rgba(RGB.fg, 0.25 + 0.35 * (z / zr + 1) / 2); g.beginPath(); g.arc(x, y, 1.6, 0, 7); g.fill();
+      }
+    }
+    // points
+    let err = 0;
+    g.globalCompositeOperation = 'lighter';
+    for (let p = 0; p < NPTS; p++) {
+      const fpv = P8[p].slice(0, N), qv = ptsD[p];
+      let e2 = 0; for (let d = 0; d < N; d++) e2 += (fpv[d] - ptsT[p][d]) ** 2; err += Math.sqrt(e2);
+      const F = project(rotate(fpv, rot), sc, cx, cy), Q = project(rotate(qv, rot), sc, cx, cy);
+      const dx = Q[0] - F[0], dy = Q[1] - F[1];
+      if (dx * dx + dy * dy > 1) {
+        g.strokeStyle = rgba(RGB.err, 0.45); g.lineWidth = 1;
+        g.beginPath(); g.moveTo(F[0], F[1]); g.lineTo(Q[0], Q[1]); g.stroke();
+        g.fillStyle = rgba(RGB.fg, 0.35); g.beginPath(); g.arc(F[0], F[1], 1.3, 0, 7); g.fill();
+      }
+      const c = P8[p][0] + 0.4 * P8[p][1] >= 0 ? RGB.pos : RGB.neg;
+      const depth = (Q[2] / zr + 1) / 2;
+      g.fillStyle = rgba(c, 0.18); g.beginPath(); g.arc(Q[0], Q[1], 5 + depth * 2, 0, 7); g.fill();
+      g.fillStyle = rgba(c, 0.6 + 0.4 * depth); g.beginPath(); g.arc(Q[0], Q[1], 1.8 + depth * 1.2, 0, 7); g.fill();
+    }
+    g.globalCompositeOperation = 'source-over';
+    g.font = MONO; g.fillStyle = COL.muted; g.textAlign = 'left';
+    g.fillText(`mean snap error ${(err / NPTS).toFixed(3)}`, 12, h - 12);
+    g.textAlign = 'right';
+    g.fillText(b === 1 ? `${new Set(ptsT.map(v => v.map(x => x > 0 ? 1 : 0).join(''))).size} / ${1 << N} corners used` : '', w - 12, h - 12);
+  }
+
+  // ---------- draw: histogram ----------
+  let levelAnim = 0;
+  function drawHist(dt) {
+    const { g, w, h } = views.hist; if (!w) return;
+    g.clearRect(0, 0, w, h);
+    const padL = 14, padR = 14, padT = 14, padB = 26;
+    const R = TR * 1.05, X = v => padL + (v + R) / (2 * R) * (w - padL - padR);
+    const BINS = Math.max(30, Math.min(90, Math.floor(w / 8)));
+    const counts = new Array(BINS).fill(0);
+    for (const v of T) counts[Math.min(BINS - 1, Math.floor((v + R) / (2 * R) * BINS))]++;
+    const mx = Math.max(...counts), H = h - padT - padB, bw = (w - padL - padR) / BINS;
+    for (let k = 0; k < BINS; k++) {
+      const bh = Math.sqrt(counts[k] / mx) * H;
+      const xc = -R + (k + 0.5) * 2 * R / BINS;
+      g.fillStyle = rgba(xc >= 0 ? RGB.pos : RGB.neg, 0.22);
+      g.fillRect(padL + k * bw + 0.5, padT + H - bh, Math.max(1, bw - 1), bh);
+    }
+    levelAnim = Math.min(1, levelAnim + dt * 2.5);
+    const e = 1 - Math.pow(1 - levelAnim, 3);
+    if (levels.length) {
+      const lm = Math.max(...levels.map(l => l.c));
+      for (const L of levels) {
+        const x = X(L.x), lh = Math.sqrt(L.c / lm) * H * e;
+        const c = L.x >= 0 ? RGB.pos : RGB.neg;
+        g.strokeStyle = rgba(c, levels.length > 60 ? 0.55 : 0.95); g.lineWidth = levels.length > 60 ? 1 : 2;
+        g.beginPath(); g.moveTo(x, padT + H); g.lineTo(x, padT + H - lh); g.stroke();
+        if (levels.length <= 60) { g.fillStyle = rgba(c, 1); g.beginPath(); g.arc(x, padT + H - lh, 3.2, 0, 7); g.fill(); }
+      }
+    } else {
+      g.font = MONO; g.fillStyle = COL.muted; g.textAlign = 'right';
+      g.fillText('FP32: continuous, no grid', w - padR, padT + 12);
+    }
+    // axis
+    g.fillStyle = rgba(RGB.muted, 0.5); g.fillRect(padL, padT + H, w - padL - padR, 1);
+    g.font = MONO; g.fillStyle = COL.muted; g.textAlign = 'center';
+    const ticks = [-0.1, -0.05, 0, 0.05, 0.1].filter(v => Math.abs(v) <= R);
+    for (const v of ticks) { g.fillRect(X(v), padT + H, 1, 4); g.fillText(v === 0 ? '0' : v.toFixed(2), X(v), h - 8); }
+  }
+
+  // ---------- loop ----------
+  let last = performance.now(), t = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    t += dt * (reduce ? 0.15 : 1);
+    if (auto) { autoT += dt; if (autoT > AUTO_EVERY) { autoT = 0; setPrec((pi + 1) % PREC.length); levelAnim = 0; } }
+    const k = Math.min(1, dt * 5);
+    for (let l = 0; l < Wd.length; l++) for (let j = 0; j < Wd[l].length; j++) for (let i = 0; i < Wd[l][j].length; i++) Wd[l][j][i] += (Wt[l][j][i] - Wd[l][j][i]) * k;
+    for (let p = 0; p < NPTS; p++) for (let d = 0; d < N; d++) ptsD[p][d] += (ptsT[p][d] - ptsD[p][d]) * k * 0.8;
+    const x = LAYERS[0] ? Array.from({ length: LAYERS[0] }, (_, i) => 0.85 * Math.sin(t * (0.55 + 0.21 * i) + i * 1.7) + 0.25 * Math.sin(t * 1.9 + i * 2.3)) : [];
+    const accFp = forward(W, x), accQ = forward(Wd, x);
+    const yq = accQ.at(-1), yf = accFp.at(-1);
+    const drift = yq.reduce((s, v, j) => s + Math.abs(v - yf[j]), 0) / yq.length;
+    driftAvg += (drift - driftAvg) * Math.min(1, dt * 3);
+    drawNet(t, dt, accFp, accQ);
+    drawDim(t);
+    drawHist(dt);
+    $('#gDrift').textContent = driftAvg.toFixed(3);
+    requestAnimationFrame(frame);
+  }
+  buildSpace();
+  setPrec(0);
+  segBox.addEventListener('click', () => { levelAnim = 0; });
+  requestAnimationFrame(frame);
+})();
+</script>
