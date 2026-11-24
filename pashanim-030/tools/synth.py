@@ -430,7 +430,7 @@ place("sfx", riser(0.55, 0.3), fr(E["s8"] - 33), send=0.2)
 # S9: final hit, then the call ends (German busy tone, 425 Hz)
 place("sfx", impact(1.0 * HIT, dur=2.6, f0=100, f1=30), fr(T["s9"]), send=0.5)
 place("sfx", crash(0.6 * HIT), fr(T["s9"]), send=0.4)
-BUSY = [T["s9"] + 118, T["s9"] + 140]
+BUSY = [T["s9"] + 90, T["s9"] + 108]
 for f in BUSY:
     n = int(0.16 * SR)
     beep = bp(np.sin(2 * np.pi * 425 * tt(n)), 300, 3400)

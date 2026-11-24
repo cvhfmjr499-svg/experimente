@@ -34,19 +34,18 @@ SC = {k: (v[0], v[0] + v[1]) for k, v in TL["scenes"].items()}  # scene -> (cut,
 # target bpm (None = keep native), accents {name: (desired offset, allowed beat offsets)}
 # Accent offsets are frames after the cut; they snap to the song's real snares.
 SCENES = [
-    ("s2", "hauseingang", SC["s2"][0], SC["s2"][1], 88, 167, 180, {"s2": (50, (40, 60)), "s2b": (100, (100,))}),
+    ("s2", "hauseingang", SC["s2"][0], SC["s2"][1], 88, 167, 180, {"s2": (50, (40, 60)), "s2b": (80, (80,))}),
     ("s3", "airwaves", SC["s3"][0], SC["s3"][1], 0, 132, 144,
-     {"s3": (50, (50,)), "s3b": (100, (100,)), "s3c": (150, (125, 150))}),
+     {"s3": (50, (50,)), "s3b": (75, (75,)), "s3c": (100, (100,))}),
     ("s4", "sommergewitter", SC["s4"][0], SC["s4"][1] - 6, 0, 184, 180,
-     {"s4": (50, (40, 60)), "s4b": (100, (100,)), "s4c": (140, (140,))}),
+     {"s4": (50, (40, 60)), "s4b": (80, (80,)), "s4c": (120, (120,))}),
     ("s5", "mittelmeer", SC["s5"][0], SC["s5"][1], 0, 178, 180,
-     {"s5": (40, (40, 60)), "s5b": (100, (100,)), "s5c": (120, (120,))}),
-    ("s6", "shababes_im_vip", SC["s6"][0], SC["s6"][1], 0, 136, 144,
-     {"s6a": (100, (100,)), "s6b": (125, (125,)), "s6c": (150, (150,))}),
+     {"s5": (40, (40,)), "s5b": (80, (80,)), "s5c": (100, (100,))}),
+    ("s6", "shababes_im_vip", SC["s6"][0], SC["s6"][1], 0, 136, 144, {"s6a": (75, (75,))}),
     ("s7", "goldrichtig", SC["s7"][0], SC["s7"][1], 0, 178, 180,
-     {"s7a": (20, (20,)), "s7b": (40, (40,)), "s7c": (60, (60,)), "s7d": (100, (100,))}),
-    ("s8", "tourlife", SC["s8"][0], SC["s8"][1], 0, 120, 120, {"s8b": (120, (120,))}),
-    ("s9", "berlin_calling", SC["s9"][0], SC["s9"][0] + 110, 0, 172, None, {}),
+     {"s7a": (20, (20,)), "s7b": (40, (40,)), "s7c": (60, (60,)), "s7d": (80, (80,))}),
+    ("s8", "tourlife", SC["s8"][0], SC["s8"][1], 0, 120, 120, {"s8b": (90, (90,))}),
+    ("s9", "berlin_calling", SC["s9"][0], SC["s9"][0] + 84, 0, 172, None, {}),
 ]
 TAIL = 3  # frames of overlap after the cut, faded
 
@@ -181,7 +180,7 @@ for scene, song, f0, f1, pre, prior, target, accs in SCENES:
         k0 = (f1 - 28 - f0) * F2S + 240
         clip[k0:] = tv_filter(clip[k0:], "highpass", lambda p: 30 + 2600 * p ** 1.5) * ramp(len(clip) - k0, 1, 0.55)
     if scene == "s9":  # the call collapses back into the phone line
-        k0 = (f0 + 76 - f0) * F2S + 240
+        k0 = 56 * F2S + 240
         ph = tv_filter(clip[k0:], "bandpass", lambda p: (200 + 500 * p, 6000 - 3200 * p))
         clip[k0:] = ph * ramp(len(clip) - k0, 1, 0) ** 1.2
 
@@ -205,7 +204,7 @@ for scene, song, f0, f1, pre, prior, target, accs in SCENES:
 bed = bed[:N]
 sf.write("audio/music_bed.wav", bed, SR, subtype="FLOAT")
 acc = {k: v for k, v in accents.items() if k[:2] not in ("s6", "s7") or k in ("s7d",)}
-acc["s6"] = [accents["s6a"], accents["s6b"], accents["s6c"]]
+acc["s6"] = [accents["s6a"], accents["s6a"] + 12, accents["s6a"] + 25]  # cursor runs down on 8th notes
 acc["s7"] = [accents["s7a"], accents["s7b"], accents["s7c"]]
 acc["scenes"] = report
 json.dump(acc, open("assets/data/accents.json", "w"), indent=1)

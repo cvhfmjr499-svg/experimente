@@ -99,6 +99,16 @@ Image.open(f"{RAW}/lounge_musik.jpg").convert("RGB").resize((160, 160), Image.LA
 Image.open(f"{RAW}/rooftop.jpg").convert("RGB").save(f"{OUT}/rooftop.jpg", quality=94)
 print("done")
 
+# 5b) yellow Airwaves pack (Melon Menthol packshot, user-supplied: assets/img/raw/airwaves_melon.jpg)
+#     -> sharp hero (1.9x) + big soft-focus copy for depth (3.4x, blurred)
+pk = cut(general_sess, f"{RAW}/airwaves_melon.jpg")
+pk = pk.crop(pk.getbbox())
+hero = upscale(pk, (round(pk.width * 1.9), round(pk.height * 1.9)))
+hero.save(f"{OUT}/airwaves_pack.png", optimize=True)
+pk.resize((round(pk.width * 3.4), round(pk.height * 3.4)), Image.LANCZOS).filter(ImageFilter.GaussianBlur(16)).save(
+    f"{OUT}/airwaves_pack_blur.png", optimize=True)
+print("airwaves pack", hero.size)
+
 # 6) clean sky plate for scene 8: inpaint the figure out of the cover, then blur
 import cv2  # noqa: E402  (ships with rembg)
 cov = cv2.imread(f"{RAW}/himmel.jpg")

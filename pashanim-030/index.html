@@ -82,22 +82,21 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
   transform-origin: 0 50%; z-index: 22; display: none; box-shadow: 0 0 18px rgba(255,255,255,.6); }
 
 /* ---------- S3 AIRWAVES ---------- */
-#s3 { z-index: 20; background: linear-gradient(#0b0b0b, #0f1218); }
+#s3 { z-index: 20; color: var(--ink);
+  background: radial-gradient(ellipse 80% 75% at 62% 38%, #ffd04a 0%, #fdb41d 46%, #ee9b0b 100%); }
+#s3packbg { position: absolute; left: -150px; top: -130px; width: 2067px; height: 1326px; opacity: .32; transform-origin: 50% 50%; }
+#s3pack { position: absolute; left: 602px; top: -40px; width: 1155px; height: 741px; transform-origin: 50% 55%;
+  filter: drop-shadow(0 34px 44px rgba(120, 52, 0, .38)); }
 #s3svg { position: absolute; inset: 0; width: 1920px; height: 1080px; }
-#s3title { left: 960px; top: 150px; font-weight: 250; color: var(--paper); }
-#s3counter { left: 100px; top: 560px; font-family: "ArchivoV"; font-weight: 900; font-size: 400px; line-height: 1;
+#s3counter { left: 96px; top: 590px; font-family: "ArchivoV"; font-weight: 900; font-size: 380px; line-height: 1;
   font-variation-settings: "wdth" 62, "wght" 900; display: flex; align-items: flex-start; transform-origin: 0 100%; }
-#s3counter .h { font-size: .42em; margin-top: .08em; margin-right: .04em; color: var(--orange); }
-#s3cap { left: 112px; top: 958px; font-size: 16px; }
-.peak { position: absolute; top: 676px; font-family: "ArchivoV"; font-weight: 900; font-size: 230px; line-height: 1;
-  font-variation-settings: "wdth" 62, "wght" 900; transform-origin: 0 100%; color: var(--paper); }
-.peak .h { font-size: .42em; vertical-align: top; color: var(--orange); margin-right: .04em; }
-.peak .ct { position: absolute; left: 4px; top: -30px; font-family: "Mono"; font-size: 16px; font-weight: 700; letter-spacing: .24em; color: var(--paper); }
-#s3de { position: absolute; left: 110px; top: 528px; font-size: 16px; font-weight: 700; letter-spacing: .24em; }
-#s3card { left: 1384px; top: 586px; width: 380px; height: 380px; transform-origin: 50% 100%;
-  box-shadow: 0 30px 60px rgba(0,0,0,.55); }
-#s3card img { width: 100%; height: 100%; display: block; }
-#s3card .tag { position: absolute; left: 0; top: -34px; font-size: 13px; }
+#s3counter .h { font-size: .42em; margin-top: .08em; margin-right: .04em; }
+#s3cap { left: 104px; top: 966px; font-size: 16px; font-weight: 700; }
+.peak { position: absolute; top: 730px; font-family: "ArchivoV"; font-weight: 900; font-size: 210px; line-height: 1;
+  font-variation-settings: "wdth" 62, "wght" 900; transform-origin: 0 100%; }
+.peak .h { font-size: .42em; vertical-align: top; margin-right: .04em; }
+.peak .ct { position: absolute; left: 4px; top: -28px; font-family: "Mono"; font-size: 16px; font-weight: 800; letter-spacing: .24em; }
+#s3de { position: absolute; left: 104px; top: 594px; font-size: 16px; font-weight: 800; letter-spacing: .24em; }
 
 /* ---------- S4 SOMMERGEWITTER ---------- */
 #s4 { z-index: 30; background: radial-gradient(ellipse 120% 90% at 60% 0%, #16245c 0%, #0a1236 40%, #050817 78%); }
@@ -260,20 +259,20 @@ body.render #ui { display: none; }
 
     <!-- S3 · AIRWAVES -->
     <section class="scene" id="s3">
+      <img id="s3packbg" src="assets/img/airwaves_pack_blur.png" alt="">
+      <img id="s3pack" src="assets/img/airwaves_pack.png" alt="">
       <svg id="s3svg" viewBox="0 0 1920 1080">
         <defs>
           <filter id="glow3" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
         </defs>
         <path id="s3glow" fill="none" stroke="#5b78ff" stroke-width="10" filter="url(#glow3)" opacity="0"/>
-        <path id="s3path" fill="none" stroke="#f2eee5" stroke-width="3" stroke-linejoin="round"/>
+        <path id="s3path" fill="none" stroke="#141414" stroke-width="4" stroke-linejoin="round"/>
       </svg>
-      <div class="abs big" id="s3title">AIRWAVES</div>
       <div class="abs" id="s3counter"><span class="h">#</span><span id="s3num">100</span></div>
       <div class="abs mono" id="s3cap"></div>
       <div class="abs mono" id="s3de">DE</div>
-      <div class="peak" id="s3at" style="left:520px"><span class="ct">AT</span><span class="h">#</span><span class="v">48</span></div>
-      <div class="peak" id="s3ch" style="left:850px"><span class="ct">CH</span><span class="h">#</span><span class="v">60</span></div>
-      <div class="abs" id="s3card"><div class="tag mono">SINGLE · 14.05.2020</div><img src="assets/img/airwaves.jpg" alt=""></div>
+      <div class="peak" id="s3at" style="left:470px"><span class="ct">AT</span><span class="h">#</span><span class="v">48</span></div>
+      <div class="peak" id="s3ch" style="left:730px"><span class="ct">CH</span><span class="h">#</span><span class="v">60</span></div>
     </section>
 
     <!-- S4 · SOMMERGEWITTER -->
@@ -508,7 +507,7 @@ const YEARS = [[0, 2000], [T.s3 + 4, 2020], [T.s4 + 4, 2021], [T.s5 + 4, 2024], 
 const NOWPLAYING = [[0, "WÄHLT 030 …"], [50, "VERBINDE …"], ...["s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9"]
   .map(k => [T[k], "JETZT LÄUFT — " + SONGS[k]]), [BUSY[0], ""]];
 // HUD ink on light scenes
-const HUD_INK = [[T.s5, X.s5 - 3], [T.s7 - 8, X.s7 - 4]];
+const HUD_INK = [[T.s3, X.s3], [T.s5, X.s5 - 3], [T.s7 - 8, X.s7 - 4]];
 
 /* =====================================================================
    BUILD
@@ -569,9 +568,6 @@ function buildS2() {
 }
 
 function buildS3() {
-  const t = $("#s3title");
-  t.style.fontSize = fitFont(t, "ArchivoV", `"wdth" 125, "wght" 250`, 1240, 250) + "px";
-  t.style.fontVariationSettings = `"wdth" 125, "wght" 250`;
   // lightning bolt polyline (shared with S4), 121 points
   const pts = [];
   let seg = [[1060, -60], [900, 1140]];
@@ -815,14 +811,14 @@ function wavePoints(f) {
   return pts;
 }
 function rollAt(C, f) { let v = C.values[0]; for (let i = 0; i < C.frames.length; i++) if (f >= C.frames[i]) v = C.values[i]; return v; }
-function peakCounter(el, numEl, C, land, f, fadeIn, out) {
+function peakCounter(el, numEl, C, land, f, fadeIn, out, ink = "#141414", hit = "#ffffff") {
   numEl.textContent = rollAt(C, f);
   const sp = f >= land ? spring(f - land, 300, 18) : 0;
   const sc = f >= land ? 1 + .22 * (1 - sp) : 1;
   const jit = (f >= C.frames[0] && f < land) ? (rnd(f * 7 + land) - .5) * 10 : 0;
   el.style.transform = `translateY(${jit}px) scale(${sc})`;
   el.style.opacity = fadeIn * out;
-  el.style.color = (f >= land && f < land + 6) ? "#ff4a0d" : "#f2eee5";
+  el.style.color = (f >= land && f < land + 6) ? hit : ink;
 }
 function updS3(f) {
   const el = $("#s3"), a = X.s2 - 16, b = X.s3 + 2;
@@ -843,14 +839,15 @@ function updS3(f) {
   $("#s3path").setAttribute("d", d);
   $("#s3glow").setAttribute("d", d);
   $("#s3glow").setAttribute("opacity", .25 + .75 * m);
-  $("#s3path").setAttribute("stroke", m > .2 ? "#e8ecff" : "#f2eee5");
-  $("#s3path").setAttribute("stroke-width", 3 + 2 * m);
+  $("#s3path").setAttribute("stroke", m > .2 ? "#e8ecff" : "#141414");
+  $("#s3path").setAttribute("stroke-width", 4 + 1.5 * m);
   const out = 1 - E.in(inv(X.s3 - 18, X.s3 - 6, f));
-  const title = $("#s3title");
-  const ls = lerp(.5, .05, E.out(inv(T.s3 - 2, T.s3 + 44, f)));
-  title.style.letterSpacing = ls + "em";
-  title.style.transform = `translateX(-50%) translateX(${ls * .5}em)`;
-  title.style.opacity = E.out(inv(T.s3 - 2, T.s3 + 10, f)) * out;
+  // the yellow Airwaves pack: slides in with the slit, drifts, pulses on the kick
+  const pk = spring(f - (T.s3 - 8), 150, 20);
+  const drift = inv(T.s3, X.s3, f);
+  $("#s3pack").style.transform = `translate(${(1 - pk) * 620}px, ${(1 - pk) * 140 - 12 * drift}px) ` +
+    `rotate(${lerp(9, 0, pk) + lerp(-1.2, 1.6, drift)}deg) scale(${1 + .05 * drift + .012 * feat("kick", f)})`;
+  $("#s3packbg").style.transform = `translate(${(1 - pk) * 220 - 40 * drift}px, ${20 * drift}px) rotate(-6deg) scale(${lerp(1.12, 1.0, pk)})`;
   // DE counter 100 -> 2 on the snare, then AT 6 and CH 13 roll in on the next snares
   peakCounter($("#s3counter"), $("#s3num"), EV.counters.de, ACC.s3, f, E.out(inv(T.s3 + 8, T.s3 + 16, f)), out);
   peakCounter($("#s3at"), $("#s3at .v"), EV.counters.at, ACC.s3b, f, E.out(inv(EV.counters.at.frames[0] - 3, EV.counters.at.frames[0] + 3, f)), out);
@@ -859,10 +856,6 @@ function updS3(f) {
   $("#s3de").style.opacity = out;
   $("#s3cap").textContent = scramble("PLATZ 2 · DEUTSCHE SINGLE-CHARTS · 2020", f, ACC.s3 + 2, 14, 11);
   $("#s3cap").style.opacity = out;
-  const cp = spring(f - (T.s3 + 6), 170, 22);
-  const card = $("#s3card");
-  card.style.transform = `translateX(${(1 - cp) * 760}px) rotate(${lerp(14, -4, cp)}deg) translateY(${Math.sin(f / 22) * 6}px)`;
-  card.style.opacity = (f >= T.s3 + 6 ? 1 : 0) * out;
 }
 
 function lightning(f) {
@@ -1143,7 +1136,7 @@ function renderFrame(f) {
     f >= X.s4 - 16 && f < X.s4 ? E.inCubic(inv(X.s4 - 16, X.s4 - 4, f)) : 0,
     f >= T.s5 && f < T.s5 + 12 ? 1 - E.out(inv(T.s5, T.s5 + 12, f)) : 0,
     f >= X.s8 - 26 && f < X.s8 ? E.in(inv(X.s8 - 26, X.s8 - 3, f)) : 0);
-  const vbase = (f >= T.s5 && f < X.s5 - 3) ? .25 : (f >= T.s7 - 4 && f < X.s7 ? .7 : 1);
+  const vbase = (f >= T.s5 && f < X.s5 - 3) ? .25 : (f >= T.s7 - 4 && f < X.s7 ? .7 : (f >= T.s3 && f < X.s3 ? .6 : 1));
   $("#vignette").style.opacity = (vbase * (1 - whiteness)).toFixed(3);
   lastF = f;
 }
