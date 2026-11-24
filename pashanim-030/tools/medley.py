@@ -31,7 +31,7 @@ N = 900 * F2S
 # scene, song, first frame (cut), last frame (exclusive), pre-roll frames, tempo prior,
 # target bpm (None = keep native), accents {name: (desired offset, allowed beat offsets)}
 SCENES = [
-    ("s2", "hauseingang", 100, 200, 44, 167, 180, {"s2": (50, (40, 60))}),
+    ("s2", "hauseingang", 100, 200, 88, 167, 180, {"s2": (50, (40, 60))}),
     ("s3", "airwaves", 200, 300, 0, 132, 144, {"s3": (50, (50,))}),
     ("s4", "sommergewitter", 300, 394, 0, 184, 180, {"s4": (50, (40, 60))}),
     ("s5", "mittelmeer", 400, 500, 0, 178, 180, {"s5": (40, (40, 60))}),
@@ -157,7 +157,7 @@ for scene, song, f0, f1, pre, prior, target, accs in SCENES:
         ph = np.tanh(ph * 2.2) / 2.2
         fade_in = ramp(k, 0, 1) ** 1.6
         x = clip.copy()
-        x[:k] = ph[:k] * fade_in * 0.8
+        x[:k] = ph[:k] * fade_in * 0.9
         xf = ramp(480, 0, 1)
         x[k:k + 480] = ph[k:k + 480] * 0.8 * (1 - xf) + clip[k:k + 480] * xf
         clip = x

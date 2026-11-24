@@ -39,6 +39,7 @@ rng = np.random.default_rng(30)
 import os  # noqa: E402
 BED_PATH, ACC_PATH = "audio/music_bed.wav", "assets/data/accents.json"
 USE_BED = os.path.exists(BED_PATH) and os.path.exists(ACC_PATH)
+HIT = 0.55 if USE_BED else 1.0  # extra trim on the big hits under the songs
 ACC = json.load(open(ACC_PATH)) if USE_BED else {"s2": 150, "s3": 250, "s4": 350, "s5": 425, "s7": [625, 650, 675]}
 
 
@@ -398,10 +399,10 @@ for b in (4, 5, 6):
             place("hats", hat(lvl * 0.75, dec=0.11), bar_s(b, s + sw), pan=0.3)
         else:
             place("hats", hat(lvl), bar_s(b, s + sw), pan=0.3)
-place("sfx", crash(0.55), bar_s(4), send=0.3)
+place("sfx", crash(0.55 * HIT), bar_s(4), send=0.3)
 if not USE_BED:
     place("sfx", crash(0.3), bar_s(7), send=0.4)
-place("sfx", crash(0.6), bar_s(8), send=0.4)
+place("sfx", crash(0.6 * HIT), bar_s(8), send=0.4)
 
 # --- 808
 prev = None
@@ -444,7 +445,7 @@ for f, d in [(0, "0"), (25, "3"), (50, "0")]:
 place("sfx", whoosh(34 / 60, 200, 9000, 0.32, rising=True, pan_from=0.0, pan_to=0.0), fr(66), send=0.2)
 place("sfx", impact(0.35, dur=0.6, f0=80, f1=40), fr(100))
 place("sfx", zip_sound(0.2, 0.3), fr(186), pan=-0.2, send=0.2)
-place("sfx", static_burst(0.45, 0.3 if USE_BED else 0.42), fr(200), pan=0.1, send=0.15)
+place("sfx", static_burst(0.45, 0.22 if USE_BED else 0.42), fr(200), pan=0.1, send=0.15)
 
 # chart counter #100 -> #2 (decelerating), lands on the snare at f250
 counter_vals = [100, 86, 71, 55, 42, 31, 22, 15, 10, 7, 5, 4, 3, 2]
@@ -453,15 +454,15 @@ for i, f in enumerate(counter_frames):
     place("sfx", tick(0.28 if i < len(counter_frames) - 1 else 0.5, 3600 + 60 * i), fr(f), pan=-0.3)
 
 place("sfx", tv_filter(noise(fr(14)), "bandpass", lambda p: (2000 + 4000 * p, 9000), order=1) * 0.12, fr(286), pan=0.1)
-place("sfx", thunder(0.9), fr(300), send=0.35)
-place("sfx", thunder(0.28, 0.9), fr(304), pan=0.4)
-place("sfx", thunder(0.22, 0.9), fr(309), pan=-0.4)
-place("sfx", impact(0.45, dur=1.0, f0=120, f1=45), fr(ACC["s4"]), send=0.2)
-place("sfx", riser(1.0, 0.36), fr(340), send=0.25)
-place("sfx", impact(1.0, dur=2.4), fr(400), send=0.4)
+place("sfx", thunder(0.9 * HIT), fr(300), send=0.35)
+place("sfx", thunder(0.28 * HIT, 0.9), fr(304), pan=0.4)
+place("sfx", thunder(0.22 * HIT, 0.9), fr(309), pan=-0.4)
+place("sfx", impact(0.45 * HIT, dur=1.0, f0=120, f1=45), fr(ACC["s4"]), send=0.2)
+place("sfx", riser(1.0, 0.36 * (0.8 if USE_BED else 1)), fr(340), send=0.25)
+place("sfx", impact(1.0 * HIT, dur=2.4), fr(400), send=0.4)
 for i, f in enumerate([402, 408, 414, 420]):
     place("sfx", whoosh(0.16, 900, 7000, 0.12, rising=False, pan_from=-0.7 + i * 0.45, pan_to=-0.5 + i * 0.45), fr(f))
-place("sfx", impact(0.5, dur=0.5, f0=140, f1=60), fr(ACC["s5"]))
+place("sfx", impact(0.5 * HIT, dur=0.5, f0=140, f1=60), fr(ACC["s5"]))
 place("sfx", whoosh(0.22, 400, 8000, 0.3, rising=False, pan_from=0.8, pan_to=-0.8), fr(490), send=0.15)
 
 # split-flap board schedule (shared with the composition)
@@ -502,7 +503,7 @@ place("sfx", whoosh(0.24, 300, 9000, 0.32, rising=False, pan_from=0, pan_to=0), 
 rev_sh = pad_chord([76, 79, 83, 88], 0.4, 6000, level=0.3, attack=0.38, release=0.02)
 place("sfx", rev_sh, fr(690), send=0.8)
 place("sfx", riser(0.55, 0.3), fr(767), send=0.2)
-place("sfx", impact(1.0, dur=2.6, f0=100, f1=30), fr(800), send=0.5)
+place("sfx", impact(1.0 * HIT, dur=2.6, f0=100, f1=30), fr(800), send=0.5)
 # hang-up: German busy tone (425 Hz) twice, phone band-limited
 for f in ((852, 874) if USE_BED else (848, 870)):
     n = int(0.16 * SR)
@@ -538,20 +539,20 @@ GAINS = {"kick": 0.80, "snare": 0.80, "hats": 0.42, "bass": 0.40, "pad": 0.62, "
 if USE_BED:
     for k in ("kick", "snare", "hats", "bass", "pad", "lead"):
         GAINS[k] = 0.0
-    GAINS["sfx"] = 0.42
-    GAINS["dtmf"] = 0.5
+    GAINS["sfx"] = 0.17
+    GAINS["dtmf"] = 0.38
     bed, bsr = sf_read(BED_PATH)
     assert bsr == SR
     bed_full = np.zeros((L, 2))
     bed_full[: len(bed)] = bed[:L]
-mix = sum(st[k] * g for k, g in GAINS.items()) + verb * (0.18 if USE_BED else 0.28)
+mix = sum(st[k] * g for k, g in GAINS.items()) + verb * (0.1 if USE_BED else 0.28)
 if USE_BED:
     mix = mix + bed_full * 1.0
 mix = hp(mix, 28)
 # look-ahead peak limiter (keeps transients clean instead of saturating)
 from scipy.ndimage import maximum_filter1d
 mix = mix[:N]
-target_rms_db = -14.5
+target_rms_db = -13.6
 mix *= 10 ** (target_rms_db / 20) / np.sqrt((mix ** 2).mean())
 look = int(0.004 * SR)
 pk = maximum_filter1d(np.abs(mix).max(1), size=2 * look + 1)
