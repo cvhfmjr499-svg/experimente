@@ -8,7 +8,7 @@ The edit is cut in 100-frame bars. Each scene runs on one of his songs: a beat-a
 |---|---|---|---|
 | 1 | 0–99 | **030** | Berlin's area code is "dialed" (real DTMF tones). The digits are vector glyph windows with a tri-tone photo inside. The camera flies through the counter of the last "0", and that portal opens onto scene 2. |
 | 2 | 100–199 | **PASHANIM** · *Hauseingang* (it first comes through the phone line) | The name sits behind a cut-out portrait, with an outline copy in front. The variable-font width axis opens on the snare. |
-| 3 | 200–299 | **Airwaves** (2020, #2) · *Airwaves* (tuned in like a radio) | A waveform driven by the score's real envelope, plus a chart counter that rolls from 100 down to 2. |
+| 3 | 200–299 | **Airwaves** (2020, #2) · *Airwaves* (tuned in like a radio) | A waveform driven by the soundtrack's real envelope, plus a chart counter that rolls from 100 down to 2. |
 | 4 | 300–399 | **Sommergewitter** (2021, first #1) · *Sommergewitter* | The waveform morphs into a lightning bolt. The text is lit only by the strikes, then a white-out into the drop. |
 | 5 | 400–499 | **2000** (debut album, #1) · *Mittelmeer* | The cover assembles from 25 tiles flying in 3D, the outline type draws on, and a spinning #1 stamp lands. |
 | 6 | 500–599 | **Nr. 1** · *Shabab(e)s im VIP* | A split-flap board (with clatter in the score), then an orange flood out of the *Lounge Musik* row. |
@@ -18,7 +18,7 @@ The edit is cut in 100-frame bars. Each scene runs on one of his songs: a beat-a
 
 ## Rebuild
 
-You need Node with Playwright and Chromium, ffmpeg, ImageMagick, and Python 3 with `rembg[cpu] opencv-python-headless fonttools brotli scipy pillow numpy`.
+You need Node with Playwright and Chromium, ffmpeg, ImageMagick, and Python 3 with `rembg[cpu] opencv-python-headless fonttools brotli scipy pillow numpy librosa soundfile`.
 
 ```bash
 ./tools/fetch_assets.sh                 # press photo + cover art (not committed, see below)
