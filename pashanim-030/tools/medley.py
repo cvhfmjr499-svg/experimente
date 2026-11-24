@@ -26,19 +26,27 @@ import soundfile as sf
 warnings.filterwarnings("ignore")
 SR, FPS = 48000, 60
 F2S = SR // FPS
-N = 900 * F2S
+TL = json.load(open("assets/data/timeline.json"))
+N = TL["frames"] * F2S
+SC = {k: (v[0], v[0] + v[1]) for k, v in TL["scenes"].items()}  # scene -> (cut, end)
 
 # scene, song, first frame (cut), last frame (exclusive), pre-roll frames, tempo prior,
 # target bpm (None = keep native), accents {name: (desired offset, allowed beat offsets)}
+# Accent offsets are frames after the cut; they snap to the song's real snares.
 SCENES = [
-    ("s2", "hauseingang", 100, 200, 88, 167, 180, {"s2": (50, (40, 60))}),
-    ("s3", "airwaves", 200, 300, 0, 132, 144, {"s3": (50, (50,))}),
-    ("s4", "sommergewitter", 300, 394, 0, 184, 180, {"s4": (50, (40, 60))}),
-    ("s5", "mittelmeer", 400, 500, 0, 178, 180, {"s5": (40, (40, 60))}),
-    ("s6", "shababes_im_vip", 500, 600, 0, 136, 144, {}),
-    ("s7", "goldrichtig", 600, 700, 0, 178, 180, {"s7a": (20, (20,)), "s7b": (40, (40,)), "s7c": (60, (60,))}),
-    ("s8", "tourlife", 700, 800, 0, 120, None, {}),
-    ("s9", "berlin_calling", 800, 846, 0, 172, None, {}),
+    ("s2", "hauseingang", SC["s2"][0], SC["s2"][1], 88, 167, 180, {"s2": (50, (40, 60)), "s2b": (100, (100,))}),
+    ("s3", "airwaves", SC["s3"][0], SC["s3"][1], 0, 132, 144,
+     {"s3": (50, (50,)), "s3b": (100, (100,)), "s3c": (150, (125, 150))}),
+    ("s4", "sommergewitter", SC["s4"][0], SC["s4"][1] - 6, 0, 184, 180,
+     {"s4": (50, (40, 60)), "s4b": (100, (100,)), "s4c": (140, (140,))}),
+    ("s5", "mittelmeer", SC["s5"][0], SC["s5"][1], 0, 178, 180,
+     {"s5": (40, (40, 60)), "s5b": (100, (100,)), "s5c": (120, (120,))}),
+    ("s6", "shababes_im_vip", SC["s6"][0], SC["s6"][1], 0, 136, 144,
+     {"s6a": (100, (100,)), "s6b": (125, (125,)), "s6c": (150, (150,))}),
+    ("s7", "goldrichtig", SC["s7"][0], SC["s7"][1], 0, 178, 180,
+     {"s7a": (20, (20,)), "s7b": (40, (40,)), "s7c": (60, (60,)), "s7d": (100, (100,))}),
+    ("s8", "tourlife", SC["s8"][0], SC["s8"][1], 0, 120, 120, {"s8b": (120, (120,))}),
+    ("s9", "berlin_calling", SC["s9"][0], SC["s9"][0] + 110, 0, 172, None, {}),
 ]
 TAIL = 3  # frames of overlap after the cut, faded
 
@@ -167,13 +175,13 @@ for scene, song, f0, f1, pre, prior, target, accs in SCENES:
         w = ramp(k, 0, 1) ** 1.3
         clip[:k] = swept * (1 - w) + clip[:k] * w
     if scene == "s6":  # filter down into the orange flood
-        k0 = (582 - f0) * F2S + 240
+        k0 = (f1 - 18 - f0) * F2S + 240
         clip[k0:] = tv_filter(clip[k0:], "lowpass", lambda p: 16000 * (0.03 ** p))
     if scene == "s8":  # thins out under the sun flare
-        k0 = (772 - f0) * F2S + 240
+        k0 = (f1 - 28 - f0) * F2S + 240
         clip[k0:] = tv_filter(clip[k0:], "highpass", lambda p: 30 + 2600 * p ** 1.5) * ramp(len(clip) - k0, 1, 0.55)
     if scene == "s9":  # the call collapses back into the phone line
-        k0 = (822 - f0) * F2S + 240
+        k0 = (f0 + 76 - f0) * F2S + 240
         ph = tv_filter(clip[k0:], "bandpass", lambda p: (200 + 500 * p, 6000 - 3200 * p))
         clip[k0:] = ph * ramp(len(clip) - k0, 1, 0) ** 1.2
 
@@ -196,7 +204,9 @@ for scene, song, f0, f1, pre, prior, target, accs in SCENES:
 
 bed = bed[:N]
 sf.write("audio/music_bed.wav", bed, SR, subtype="FLOAT")
-acc = {"s2": accents["s2"], "s3": accents["s3"], "s4": accents["s4"], "s5": accents["s5"],
-       "s7": [accents["s7a"], accents["s7b"], accents["s7c"]], "scenes": report}
+acc = {k: v for k, v in accents.items() if k[:2] not in ("s6", "s7") or k in ("s7d",)}
+acc["s6"] = [accents["s6a"], accents["s6b"], accents["s6c"]]
+acc["s7"] = [accents["s7a"], accents["s7b"], accents["s7c"]]
+acc["scenes"] = report
 json.dump(acc, open("assets/data/accents.json", "w"), indent=1)
 print("accents:", {k: v for k, v in acc.items() if k != "scenes"})

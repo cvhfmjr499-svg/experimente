@@ -1,7 +1,7 @@
 // Frame renderer: drives index.html?render=1 with window.__seek(frame) and
 // screenshots every frame at 1920x1080 in headless Chromium.
 //
-//   node tools/render.cjs --out frames            # all 900 frames, 3 workers
+//   node tools/render.cjs --out frames            # all frames (timeline.json), 3 workers
 //   node tools/render.cjs --out /tmp/x --frames 0,50,100
 //   node tools/render.cjs --out /tmp/x --every 20
 const { chromium } = require("playwright");
@@ -12,7 +12,7 @@ const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf("--" + k); return i >= 0 ? args[i + 1] : d; };
 const OUT = path.resolve(opt("out", "frames"));
 const WORKERS = +opt("workers", 3);
-const FRAMES = 900;
+const FRAMES = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "assets/data/timeline.json"))).frames;
 let list;
 if (opt("frames")) list = opt("frames").split(",").map(Number);
 else if (opt("every")) { const e = +opt("every"); list = []; for (let f = 0; f < FRAMES; f += e) list.push(f); }

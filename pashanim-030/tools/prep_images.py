@@ -88,6 +88,10 @@ for name, px in [("album_2000", 720), ("airwaves", 520), ("sommergewitter", 160)
     upscale(im, (px, px), sharpen=px > 400).save(f"{OUT}/{name}.jpg", quality=94)
     print(name, px)
 
+# second-act covers: Hauseingang card (scene 2), Mittelmeer flip side (scene 5)
+upscale(Image.open(f"{RAW}/hauseingang.jpg").convert("RGB"), (440, 440)).save(f"{OUT}/hauseingang.jpg", quality=94)
+upscale(Image.open(f"{RAW}/mittelmeer.jpg").convert("RGB"), (600, 600)).save(f"{OUT}/mittelmeer_600.jpg", quality=94)
+
 # thumbnails of the Lounge Musik cover for the hit board
 Image.open(f"{RAW}/lounge_musik.jpg").convert("RGB").resize((160, 160), Image.LANCZOS).save(f"{OUT}/lounge_thumb.jpg", quality=94)
 

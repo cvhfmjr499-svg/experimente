@@ -1,17 +1,31 @@
 {
- "s2": 138,
- "s3": 249,
- "s4": 358,
- "s5": 439,
+ "s2": 158,
+ "s2b": 199,
+ "s3": 349,
+ "s3b": 399,
+ "s3c": 424,
+ "s4": 558,
+ "s4b": 599,
+ "s4c": 639,
+ "s5": 741,
+ "s5b": 801,
+ "s5c": 818,
+ "s7d": 1200,
+ "s8b": 1420,
+ "s6": [
+  999,
+  1024,
+  1051
+ ],
  "s7": [
-  619,
-  640,
-  658
+  1121,
+  1138,
+  1159
  ],
  "scenes": {
   "s2": {
    "song": "hauseingang",
-   "start_s": 19.249,
+   "start_s": 19.586,
    "bpm": 166.7,
    "stretch": 1.0797,
    "align_ms": 2.7
@@ -32,21 +46,21 @@
   },
   "s5": {
    "song": "mittelmeer",
-   "start_s": 14.141,
+   "start_s": 20.515,
    "bpm": 178.2,
    "stretch": 1.0101,
    "align_ms": 0.0
   },
   "s6": {
    "song": "shababes_im_vip",
-   "start_s": 3.738,
+   "start_s": 16.184,
    "bpm": 136.0,
    "stretch": 1.0588,
    "align_ms": 2.7
   },
   "s7": {
    "song": "goldrichtig",
-   "start_s": 4.389,
+   "start_s": 16.057,
    "bpm": 178.2,
    "stretch": 1.0101,
    "align_ms": 0.0
@@ -55,7 +69,7 @@
    "song": "tourlife",
    "start_s": 22.152,
    "bpm": 120.2,
-   "stretch": 1.0,
+   "stretch": 0.9985,
    "align_ms": 0.0
   },
   "s9": {

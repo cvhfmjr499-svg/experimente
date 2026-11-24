@@ -22,4 +22,5 @@ get airwaves.jpg       "$DZ/8fe0cbe64993adffa0d9ea8425d6c0d7/1000x1000-000000-80
 get sommergewitter.jpg "$DZ/05ff4ebb64ccb837a771aca759c8956a/1000x1000-000000-80-0-0.jpg"
 get mittelmeer.jpg     "$DZ/db56e76f402e7315d3c8eaced2abdad4/1000x1000-000000-80-0-0.jpg"
 get gruenewuerfelflow.jpg "$DZ/c06cfdfe97d6dcdd1359fc274e5599fe/1000x1000-000000-80-0-0.jpg"
+get hauseingang.jpg    "$DZ/94bff33c052ea31184cd5df3e868954d/1000x1000-000000-80-0-0.jpg"
 echo "done"

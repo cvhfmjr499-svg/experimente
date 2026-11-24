@@ -41,6 +41,7 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
 #hudBL { left: 72px; bottom: 46px; }
 #hudBR { right: 72px; bottom: 42px; display: flex; align-items: flex-end; gap: 14px; }
 #hud .dim { opacity: .55; }
+#np { right: 72px; top: 66px; font-size: 12px !important; opacity: .8; }
 #vu { display: flex; gap: 3px; align-items: flex-end; height: 16px; }
 #vu i { display: block; width: 3px; background: currentColor; height: 3px; }
 #year { display: flex; font-size: 30px; font-weight: 700; letter-spacing: .02em; line-height: 30px; height: 30px; }
@@ -74,6 +75,9 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
 .bigname.outline { color: transparent; -webkit-text-stroke: 2px var(--paper); }
 #s2cap { left: 96px; top: 846px; font-size: 16px; line-height: 1.75; }
 #s2cap b { display: block; font-size: 26px; font-weight: 700; letter-spacing: .14em; }
+#s2card { left: 1452px; top: 548px; width: 380px; height: 380px; box-shadow: 0 30px 70px rgba(0,0,0,.6); transform-origin: 50% 100%; }
+#s2card img { width: 100%; height: 100%; display: block; }
+#s2card .tag { position: absolute; left: 0; top: -32px; font-size: 13px; color: var(--paper); }
 #s2zip { position: absolute; left: 0; top: 539px; width: 1920px; height: 3px; background: var(--paper);
   transform-origin: 0 50%; z-index: 22; display: none; box-shadow: 0 0 18px rgba(255,255,255,.6); }
 
@@ -85,6 +89,11 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
   font-variation-settings: "wdth" 62, "wght" 900; display: flex; align-items: flex-start; transform-origin: 0 100%; }
 #s3counter .h { font-size: .42em; margin-top: .08em; margin-right: .04em; color: var(--orange); }
 #s3cap { left: 112px; top: 958px; font-size: 16px; }
+.peak { position: absolute; top: 676px; font-family: "ArchivoV"; font-weight: 900; font-size: 230px; line-height: 1;
+  font-variation-settings: "wdth" 62, "wght" 900; transform-origin: 0 100%; color: var(--paper); }
+.peak .h { font-size: .42em; vertical-align: top; color: var(--orange); margin-right: .04em; }
+.peak .ct { position: absolute; left: 4px; top: -30px; font-family: "Mono"; font-size: 16px; font-weight: 700; letter-spacing: .24em; color: var(--paper); }
+#s3de { position: absolute; left: 110px; top: 528px; font-size: 16px; font-weight: 700; letter-spacing: .24em; }
 #s3card { left: 1384px; top: 586px; width: 380px; height: 380px; transform-origin: 50% 100%;
   box-shadow: 0 30px 60px rgba(0,0,0,.55); }
 #s3card img { width: 100%; height: 100%; display: block; }
@@ -105,6 +114,7 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
   font-variation-settings: "wdth" 62, "wght" 900; }
 #s4cap { left: 1362px; top: 860px; font-size: 18px; line-height: 1.7; }
 #s4white { position: absolute; inset: 0; background: #fff; opacity: 0; }
+#s4peaks { left: 108px; top: 902px; font-size: 20px; font-weight: 700; letter-spacing: .3em; }
 
 /* ---------- S5 2000 ---------- */
 #s5 { z-index: 40; color: var(--ink); }
@@ -114,6 +124,10 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
   background-size: 60px 60px; background-position: 0 0; }
 #s5svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
 #s5card { position: absolute; left: 660px; top: 196px; width: 600px; height: 600px; perspective: 1400px; }
+#s5flip { position: absolute; inset: 0; transform-style: preserve-3d; }
+#s5flip .face { position: absolute; inset: 0; backface-visibility: hidden; transform-style: preserve-3d; }
+#s5back { transform: rotateY(180deg); }
+#s5back img { width: 600px; height: 600px; display: block; }
 #s5tiles { position: absolute; inset: 0; transform-style: preserve-3d; }
 .tile { position: absolute; width: 120px; height: 120px; background-size: 600px 600px; backface-visibility: hidden; }
 #s5shadow { position: absolute; left: 660px; top: 196px; width: 600px; height: 600px; box-shadow: 0 40px 80px rgba(0,0,0,.35); opacity: 0; }
@@ -145,6 +159,7 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
 .cell.pk .half span { color: var(--orange); }
 .cell.hi.pk .half span { color: var(--ink); }
 #s6flood { position: absolute; background: var(--orange); display: none; }
+#s6np { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 18px rgba(255,74,13,.8); }
 
 /* ---------- S7 LOUNGE MUSIK ---------- */
 #s7 { z-index: 60; }
@@ -159,6 +174,10 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
   font-family: "Mono"; font-weight: 800; font-size: 26px; letter-spacing: .08em; border-radius: 40px; transform-origin: 50% 50%; }
 .badge em { font-style: normal; color: var(--orange); }
 #s7cap { left: 110px; top: 868px; font-size: 18px; font-weight: 600; color: var(--ink); }
+#s7tick { position: absolute; left: 0; top: 98px; width: 1920px; height: 44px; background: var(--ink); overflow: hidden; }
+#s7tick .run { position: absolute; left: 0; top: 0; height: 44px; line-height: 44px; white-space: pre; font-family: "Mono";
+  font-size: 17px; font-weight: 700; letter-spacing: .22em; color: var(--paper); }
+#s7tick .run b { color: var(--orange); font-weight: 800; }
 
 /* ---------- S8 HIMMEL / TEMPELHOF ---------- */
 #s8 { z-index: 70; background: #3d8bff; }
@@ -173,7 +192,8 @@ html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
           mask-image: radial-gradient(circle, #000 0%, rgba(0,0,0,.6) 30%, transparent 62%); }
 #s8cut { position: absolute; left: 720px; top: -150px; width: 1240px; height: 1240px; }
 #s8title { left: 100px; top: 210px; color: #fff; filter: drop-shadow(0 4px 26px rgba(0,30,110,.45)); }
-#s8title .ln { display: block; font-size: 190px; }
+#s8title .ln, #s8titleB .ln { display: block; font-size: 190px; }
+#s8titleB { left: 100px; top: 210px; color: #fff; filter: drop-shadow(0 4px 26px rgba(0,30,110,.45)); }
 #s8cap { left: 108px; top: 690px; font-size: 18px; line-height: 1.8; color: #fff; }
 #s8cap b { font-size: 26px; font-weight: 800; letter-spacing: .12em; display: block; }
 #s8flare { position: absolute; left: 960px; top: 60px; width: 3000px; height: 3000px; margin: -1500px 0 0 -1500px;
@@ -233,6 +253,7 @@ body.render #ui { display: none; }
         <img id="s2cut" src="assets/img/portrait_cut.png" alt="">
         <div class="big bigname outline" id="s2front">PASHANIM</div>
         <div class="abs mono" id="s2cap"></div>
+        <div class="abs" id="s2card"><div class="tag mono">HAUSEINGANG · 2019 · PLATIN</div><img src="assets/img/hauseingang.jpg" alt=""></div>
       </div>
     </section>
     <div id="s2zip"></div>
@@ -249,6 +270,9 @@ body.render #ui { display: none; }
       <div class="abs big" id="s3title">AIRWAVES</div>
       <div class="abs" id="s3counter"><span class="h">#</span><span id="s3num">100</span></div>
       <div class="abs mono" id="s3cap"></div>
+      <div class="abs mono" id="s3de">DE</div>
+      <div class="peak" id="s3at" style="left:520px"><span class="ct">AT</span><span class="h">#</span><span class="v">48</span></div>
+      <div class="peak" id="s3ch" style="left:850px"><span class="ct">CH</span><span class="h">#</span><span class="v">60</span></div>
       <div class="abs" id="s3card"><div class="tag mono">SINGLE · 14.05.2020</div><img src="assets/img/airwaves.jpg" alt=""></div>
     </section>
 
@@ -271,6 +295,7 @@ body.render #ui { display: none; }
         <div class="abs big" id="s4text"><span class="ln" id="s4l1">SOMMER</span><span class="ln" id="s4l2">GEWITTER</span></div>
         <div class="abs big" id="s4one">#1</div>
         <div class="abs mono" id="s4cap"></div>
+        <div class="abs mono" id="s4peaks"></div>
       </div>
       <div id="s4white"></div>
     </section>
@@ -281,14 +306,19 @@ body.render #ui { display: none; }
         <div class="layer" id="s5grid"></div>
         <svg id="s5svg" viewBox="0 0 1920 1080"><g id="s5digits"></g></svg>
         <div id="s5shadow"></div>
-        <div id="s5card"><div id="s5tiles"></div><img id="s5face" src="assets/img/album_2000.jpg" alt=""
-          style="position:absolute;inset:0;width:600px;height:600px;opacity:0"></div>
+        <div id="s5card"><div id="s5flip">
+          <div class="face" id="s5front"><div id="s5tiles"></div><img id="s5face" src="assets/img/album_2000.jpg" alt=""
+            style="position:absolute;inset:0;width:600px;height:600px;opacity:0"></div>
+          <div class="face" id="s5back"><img src="assets/img/mittelmeer_600.jpg" alt=""></div>
+        </div></div>
         <svg id="s5stamp" viewBox="0 0 280 280">
           <defs><path id="ring" d="M140,140 m-104,0 a104,104 0 1,1 208,0 a104,104 0 1,1 -208,0"/></defs>
           <circle cx="140" cy="140" r="128" fill="#ff4a0d"/>
           <circle cx="140" cy="140" r="82" fill="none" stroke="#0b0b0b" stroke-width="1.5" opacity=".5"/>
           <g id="s5ring"><text font-family="Mono" font-size="17" font-weight="700" letter-spacing="3.6" fill="#0b0b0b">
             <textPath href="#ring">ALBUM · PLATZ 1 · DEUTSCHLAND · 2024 · ALBUM · PLATZ 1 · </textPath></text></g>
+          <g id="s5ring2" style="display:none"><text font-family="Mono" font-size="17" font-weight="700" letter-spacing="3.6" fill="#0b0b0b">
+            <textPath href="#ring">SINGLE · PLATZ 1 · DEUTSCHLAND · 2024 · SINGLE · PLATZ 1 · </textPath></text></g>
           <text x="140" y="172" text-anchor="middle" font-family="ArchivoV" font-weight="900" font-size="98" fill="#f2eee5"
                 style="font-variation-settings:'wdth' 70,'wght' 900">#1</text>
         </svg>
@@ -304,6 +334,7 @@ body.render #ui { display: none; }
         <div id="s6board">
           <div class="abs mono" id="s6head"><span>NR. 1 — DEUTSCHE CHARTS</span><span class="dim2">JAHR · TITEL · PLATZ</span></div>
           <div id="s6rows"></div>
+          <i id="s6np"></i>
         </div>
       </div>
       <div id="s6flood"></div>
@@ -320,6 +351,7 @@ body.render #ui { display: none; }
           <div class="badge"><em>#1</em>DE</div><div class="badge"><em>#1</em>AT</div><div class="badge"><em>#1</em>CH</div>
         </div>
         <div class="abs mono" id="s7cap"></div>
+        <div id="s7tick"><div class="run" id="s7run"></div></div>
       </div>
     </section>
 
@@ -331,6 +363,7 @@ body.render #ui { display: none; }
         <div class="layer" id="s8shade"></div>
         <img id="s8cut" src="assets/img/himmel_cut.png" alt="">
         <div class="abs serif" id="s8title"><span class="ln" id="s8l1">Himmel</span><span class="ln" id="s8l2">über Berlin.</span></div>
+        <div class="abs serif" id="s8titleB"><span class="ln" id="s8l3">Tempelhofer</span><span class="ln" id="s8l4">Feld.</span></div>
         <div class="abs mono" id="s8cap"></div>
       </div>
       <div id="s8flare"></div>
@@ -354,6 +387,7 @@ body.render #ui { display: none; }
     <i class="mk tl"></i><i class="mk tr"></i><i class="mk bl"></i><i class="mk br"></i>
     <div class="lbl" id="hudTL">PASHANIM <span class="dim">/ BERLIN 030</span></div>
     <div class="lbl" id="hudTR"><span id="tc">00:00:00:00</span><span id="vu"><i></i><i></i><i></i><i></i><i></i></span></div>
+    <div class="lbl" id="np"></div>
     <div class="lbl" id="hudBL"><span id="chapter"></span></div>
     <div class="lbl" id="hudBR"><span class="dim" style="font-size:12px;margin-bottom:5px">JAHR</span><span id="year"></span></div>
     <div id="prog"><i></i></div>
@@ -362,8 +396,8 @@ body.render #ui { display: none; }
 </div>
 
 <div id="ui">
-  <button id="play">▶ Play</button><span id="uitc">0 / 899</span>
-  <input id="scrub" type="range" min="0" max="899" value="0">
+  <button id="play">▶ Play</button><span id="uitc">0</span>
+  <input id="scrub" type="range" min="0" max="1739" value="0">
 </div>
 <audio id="audio" src="audio/score.wav" preload="auto"></audio>
 
@@ -372,13 +406,17 @@ body.render #ui { display: none; }
 <script>
 "use strict";
 /* =====================================================================
-   PASHANIM // 030 — 15 s motion piece. Deterministic, frame-seekable.
+   PASHANIM // 030 — ~29 s motion piece. Deterministic, frame-seekable.
    window.__seek(frame) renders any frame; window.__maTimeline.seek(t)
    follows the motion-anything freezable-timeline convention.
-   144 BPM -> 1 beat = 25 frames @ 60 fps, 1 bar = 100 frames.
+   Scene timing comes from assets/data/timeline.json (via events.js) and
+   every accent sits on a real snare of the song playing in that scene.
    ===================================================================== */
-const W = 1920, H = 1080, FPS = 60, FRAMES = 900;
+const W = 1920, H = 1080, FPS = 60;
 const EV = window.EVENTS, GL = window.GLYPHS;
+const FRAMES = EV.frames;
+const T = {}, D = {}, X = {};  // scene start, length, end (frames)
+for (const k in EV.timeline) { T[k] = EV.timeline[k][0]; D[k] = EV.timeline[k][1]; X[k] = T[k] + D[k]; }
 const $ = (s) => document.querySelector(s);
 const SVGNS = "http://www.w3.org/2000/svg";
 const svgEl = (tag, attrs = {}) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
@@ -453,17 +491,24 @@ function splitLetters(el) {
 }
 
 /* ---------- shared schedule ---------- */
-// accents = real snares/beats of the song in each scene (see tools/medley.py)
-const ACC = Object.assign({ s2: 150, s3: 250, s4: 350, s5: 425, s7: [625, 650, 675] }, EV.acc || {});
-const FLASHES = [[0, .30, 5], [25, .30, 5], [50, .34, 5], [ACC.s2, .16, 4], [ACC.s3, .22, 5], [300, 1, 4], [304, .65, 4],
-  [309, .8, 5], [ACC.s4, .38, 5], [ACC.s5, .22, 4], [ACC.s7[0], .12, 3], [ACC.s7[1], .12, 3], [ACC.s7[2], .12, 3]];
-const SHAKES = [[0, 9], [25, 9], [50, 11], [100, 5], [ACC.s2, 6], [ACC.s3, 6], [300, 15], [309, 6], [ACC.s4, 12], [400, 16],
-  [ACC.s5, 9], [ACC.s7[0], 4], [ACC.s7[1], 4], [ACC.s7[2], 5], [800, 13]];
-const CHAPTERS = [[0, "01 — 030 BERLIN"], [100, "02 — CAN DAVID BAYRAM"], [200, "03 — AIRWAVES"], [300, "04 — SOMMERGEWITTER"],
-  [400, "05 — 2000"], [500, "06 — NR. 1"], [600, "07 — LOUNGE MUSIK"], [700, "08 — TEMPELHOFER FELD"], [800, "09 — PASHANIM"]];
-const YEARS = [[0, 2000], [204, 2020], [304, 2021], [404, 2024], [504, 2025], [604, 2026]];
+// accents = real snares of the song in each scene (tools/medley.py -> accents.json -> events.js)
+const ACC = EV.acc;
+const BUSY = EV.busy;
+const SONGS = { s2: "HAUSEINGANG", s3: "AIRWAVES", s4: "SOMMERGEWITTER", s5: "MITTELMEER", s6: "SHABAB(E)S IM VIP",
+  s7: "GOLDRICHTIG", s8: "TOURLIFE.MP3", s9: "BERLIN CALLING" };
+const FLASHES = [[0, .30, 5], [25, .30, 5], [50, .34, 5], [ACC.s2, .16, 4], [ACC.s2b, .08, 3], [ACC.s3, .22, 5], [ACC.s3b, .12, 4],
+  [ACC.s3c, .12, 4], [T.s4, 1, 4], [T.s4 + 4, .65, 4], [T.s4 + 9, .8, 5], [ACC.s4, .38, 5], [ACC.s4b, .55, 4], [ACC.s4c, .45, 4],
+  [ACC.s5, .22, 4], [ACC.s5c, .2, 4], [ACC.s7[0], .12, 3], [ACC.s7[1], .12, 3], [ACC.s7[2], .12, 3], [ACC.s8b, .1, 4]];
+const SHAKES = [[0, 9], [25, 9], [50, 11], [T.s2, 5], [ACC.s2, 6], [ACC.s2b, 3], [ACC.s3, 6], [ACC.s3b, 4], [ACC.s3c, 4], [T.s4, 15],
+  [T.s4 + 9, 6], [ACC.s4, 12], [ACC.s4b, 8], [ACC.s4c, 6], [T.s5, 16], [ACC.s5, 9], [ACC.s5c, 8], [ACC.s7[0], 4], [ACC.s7[1], 4],
+  [ACC.s7[2], 5], [T.s9, 13]];
+const CHAPTERS = [[T.s1, "01 — 030 BERLIN"], [T.s2, "02 — CAN DAVID BAYRAM"], [T.s3, "03 — AIRWAVES"], [T.s4, "04 — SOMMERGEWITTER"],
+  [T.s5, "05 — 2000"], [T.s6, "06 — NR. 1"], [T.s7, "07 — LOUNGE MUSIK"], [T.s8, "08 — TEMPELHOFER FELD"], [T.s9, "09 — PASHANIM"]];
+const YEARS = [[0, 2000], [T.s3 + 4, 2020], [T.s4 + 4, 2021], [T.s5 + 4, 2024], [T.s6 + 4, 2025], [T.s7 + 4, 2026]];
+const NOWPLAYING = [[0, "WÄHLT 030 …"], [50, "VERBINDE …"], ...["s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9"]
+  .map(k => [T[k], "JETZT LÄUFT — " + SONGS[k]]), [BUSY[0], ""]];
 // HUD ink on light scenes
-const HUD_INK = [[400, 497, true], [592, 696, true]];
+const HUD_INK = [[T.s5, X.s5 - 3], [T.s7 - 8, X.s7 - 4]];
 
 /* =====================================================================
    BUILD
@@ -490,24 +535,19 @@ function buildS1() {
       x: (img.x - dx) / k, y: (img.y - base) / k, width: img.w / k, height: img.h / k, filter: "url(#tritone)" });
     fillG.appendChild(svgEl("rect", { x: -100, y: -800, width: 700, height: 1000, fill: "#0b0b0b" }));
     fillG.appendChild(im);
-    const tint = svgEl("rect", { x: -100, y: -800, width: 700, height: 1000, fill: "#ff4a0d", opacity: .0, style: "mix-blend-mode:multiply" });
-    fillG.appendChild(tint);
     const solid = svgEl("path", { d, fill: "#f2eee5", opacity: 0 });
     const outline = svgEl("path", { d, fill: "none", stroke: "#f2eee5", "stroke-width": 2.2, "vector-effect": "non-scaling-stroke", opacity: .9 });
     grp.append(fillG, solid, outline);
     root.appendChild(grp);
     const bb = gl.bbox; // units, y-down
-    S.s1.digits.push({ grp, im, solid, tint, dx, cx: dx + (bb[0] + bb[2]) / 2 * k, cy: base + (bb[1] + bb[3]) / 2 * k, imgx: (img.x - dx) / k });
+    S.s1.digits.push({ grp, im, solid, dx, cx: dx + (bb[0] + bb[2]) / 2 * k, cy: base + (bb[1] + bb[3]) / 2 * k, imgx: (img.x - dx) / k });
   });
   // portal: counter contour of the last "0" (2nd contour)
-  const last = g.glyphs[2];
-  const counterD = last.contours[1];
+  const counterD = g.glyphs[2].contours[1];
   S.s1.counterD = counterD;
-  // counter bounds straight from the path data (getBBox is 0 while the scene is display:none)
-  const cb = pathBounds(counterD);
+  const cb = pathBounds(counterD); // from path data (getBBox is 0 while the scene is display:none)
   const d2 = S.s1.digits[2];
-  S.s1.hole = { cx: d2.dx + (cb.x + cb.width / 2) * k, cy: base + (cb.y + cb.height / 2) * k, w: cb.width * k, h: cb.height * k };
-  // captions
+  S.s1.hole = { cx: d2.dx + (cb.x + cb.width / 2) * k, cy: base + (cb.y + cb.height / 2) * k };
   const capL = $("#s1capL"), capR = $("#s1capR");
   capL.style.left = (x0 + 6) + "px"; capL.style.top = (base + 34) + "px";
   capR.style.left = (x0 + totalPx - 520) + "px"; capR.style.width = "520px"; capR.style.top = (base + 34) + "px";
@@ -525,7 +565,7 @@ function buildS2() {
   const back = $("#s2back"), front = $("#s2front");
   const fs = fitFont(back, "ArchivoV", `"wdth" 118, "wght" 900`, 1800);
   [back, front].forEach(el => { el.style.fontSize = fs + "px"; });
-  S.s2 = { fs, back: splitLetters(back), front: splitLetters(front) };
+  S.s2 = { back: splitLetters(back), front: splitLetters(front) };
 }
 
 function buildS3() {
@@ -534,8 +574,7 @@ function buildS3() {
   t.style.fontVariationSettings = `"wdth" 125, "wght" 250`;
   // lightning bolt polyline (shared with S4), 121 points
   const pts = [];
-  let a = [1060, -60], b = [900, 1140];
-  let seg = [a, b];
+  let seg = [[1060, -60], [900, 1140]];
   for (let it = 0; it < 6; it++) {
     const nx = [];
     for (let i = 0; i < seg.length - 1; i++) {
@@ -547,10 +586,8 @@ function buildS3() {
     }
     nx.push(seg[seg.length - 1]); seg = nx;
   }
-  // resample to 121 points by index
   for (let i = 0; i <= 120; i++) { const j = Math.round(i / 120 * (seg.length - 1)); pts.push(seg[j]); }
   S.bolt = pts;
-  // branches for S4
   S.branches = [];
   [[38, 1], [64, -1], [86, 1]].forEach(([idx, dir], bi) => {
     const br = [pts[idx]]; let [x, y] = pts[idx];
@@ -584,12 +621,9 @@ function xformPath(d, sc, tx, ty) {
 const ptsToD = (pts) => "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L");
 
 function buildS4() {
-  S.s4 = { l1: $("#s4l1"), l2: $("#s4l2") };
-  const t = $("#s4text");
-  t.style.fontVariationSettings = `"wdth" 62, "wght" 900`;
+  $("#s4text").style.fontVariationSettings = `"wdth" 62, "wght" 900`;
   const boltD = ptsToD(S.bolt) + " " + S.branches.map(ptsToD).join(" ");
   ["#s4boltGlow", "#s4boltMid", "#s4boltCore"].forEach(s => $(s).setAttribute("d", boltD));
-  // rain drops
   S.rain = Array.from({ length: 140 }, (_, i) => ({ x: rnd(i * 7 + 1) * 2300 - 200, y0: rnd(i * 13 + 2) * 1300, len: 50 + rnd(i * 5 + 3) * 110,
     sp: 26 + rnd(i * 3 + 4) * 22, a: .08 + rnd(i * 11 + 5) * .22 }));
   S.rainCtx = $("#s4rain").getContext("2d");
@@ -600,15 +634,13 @@ function buildS5() {
   let x = 70; const base = 540 + 344 * k;
   const root = $("#s5digits");
   S.s5 = { paths: [] };
-  g.glyphs.forEach((gl, i) => {
+  g.glyphs.forEach((gl) => {
     const p = svgEl("path", { d: gl.contours.join(" "), transform: `translate(${x} ${base}) scale(${k})`, fill: "#0b0b0b", "fill-opacity": 0,
-      stroke: "#0b0b0b", "stroke-width": 3, "vector-effect": "non-scaling-stroke" });
+      stroke: "#0b0b0b", "stroke-width": 3, "vector-effect": "non-scaling-stroke", "stroke-dasharray": 4200 });
     root.appendChild(p);
     x += gl.advance * k;
     S.s5.paths.push(p);
   });
-  requestAnimationFrame(() => {});
-  // tiles
   const tiles = $("#s5tiles"); S.tiles = [];
   for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) {
     const t = document.createElement("div"); t.className = "tile";
@@ -617,7 +649,7 @@ function buildS5() {
     tiles.appendChild(t);
     const i = r * 5 + c, dist = Math.hypot(r - 2, c - 2);
     const ang = rnd(500 + i) * Math.PI * 2, rad = 700 + rnd(600 + i) * 600;
-    S.tiles.push({ el: t, delay: 400 + dist * 2.2 + rnd(700 + i) * 2, dx: Math.cos(ang) * rad, dy: Math.sin(ang) * rad * .7,
+    S.tiles.push({ el: t, delay: T.s5 + dist * 2.2 + rnd(700 + i) * 2, dx: Math.cos(ang) * rad, dy: Math.sin(ang) * rad * .7,
       rx: (rnd(800 + i) - .5) * 220, ry: (rnd(900 + i) - .5) * 260, rz: (rnd(950 + i) - .5) * 90 });
   }
 }
@@ -636,18 +668,26 @@ function buildS6() {
         <div class="half t flap"><span></span></div><div class="half b flap"><span></span></div><i class="seam"></i>`;
       el.appendChild(ce);
       const [ht, hb, ft, fb] = ce.querySelectorAll(".half");
-      return { ce, ht, hb, ft, fb, steps: cell.steps, st: ht.firstChild, sb: hb.firstChild, sft: ft.firstChild, sfb: fb.firstChild, last: null };
+      return { ce, ht, hb, ft, fb, steps: cell.steps, st: ht.firstChild, sb: hb.firstChild, sft: ft.firstChild, sfb: fb.firstChild };
     });
     rowsEl.appendChild(el);
     return { el, th, cells };
   });
+  // "now playing" marker next to the Shabab(e)s im VIP row
+  const np = $("#s6np"); np.style.left = "106px"; np.style.top = (360 + 2 * 98 + 33) + "px";
 }
 
 function buildS7() {
   S.s7 = { l1: splitLetters($("#s7l1")), l2: splitLetters($("#s7l2")), badges: [...document.querySelectorAll(".badge")] };
+  const tracks = ["BOSS GREEN", "GOLDRICHTIG", "RONDONUMBANINE", "GIORGIO ARMANI FLOW", "AUGENBLICK", "MARADONA", "PROMI PARTY",
+    "LOUNGE CITY", "LIGHT BLUE", "GUCCI TOM FORD", "BERLIN CALLING", "KALTER KRIEG", "90 MINUTEN"];
+  const seg = "LOUNGE MUSIK — TRACKLIST  ·  " + tracks.map(t => t === "GOLDRICHTIG" ? `<b>▸ ${t}</b>` : t).join("  ·  ") + "  ·  ";
+  const run = $("#s7run");
+  run.innerHTML = `<span>${seg}</span><span>${seg}</span>`;
+  S.s7.runW = run.firstChild.getBoundingClientRect().width || 3000;
 }
 function buildS8() {
-  S.s8 = { l1: splitLetters($("#s8l1")), l2: splitLetters($("#s8l2")) };
+  S.s8 = { a: [splitLetters($("#s8l1")), splitLetters($("#s8l2"))], b: [splitLetters($("#s8l3")), splitLetters($("#s8l4"))] };
 }
 function buildS9() {
   const logo = $("#s9logo");
@@ -668,7 +708,7 @@ function buildHUD() {
 }
 
 /* =====================================================================
-   PER-FRAME UPDATE
+   PER-FRAME UPDATE (every element is a pure function of the frame)
    ===================================================================== */
 function flashAt(f) {
   let v = 0;
@@ -686,7 +726,7 @@ function shakeAt(f) {
 }
 
 function updS1(f) {
-  const el = $("#s1"); vis(el, f < 101); if (f >= 101) return;
+  const el = $("#s1"); vis(el, f < X.s1 + 1); if (f >= X.s1 + 1) return;
   const s = S.s1;
   const LAND = [0, 25, 50];
   s.digits.forEach((d, i) => {
@@ -704,7 +744,6 @@ function updS1(f) {
     }
     d.solid.setAttribute("opacity", l < 2 ? 1 : clamp(1 - (l - 2) / 7));
     d.im.setAttribute("x", d.imgx - f * 0.45);
-    d.tint.setAttribute("opacity", .0);
   });
   if (f < 50) $("#s1bg").setAttribute("d", "M-60 -60 H1980 V1140 H-60 Z");
   // portal zoom into the counter of the last 0
@@ -713,7 +752,6 @@ function updS1(f) {
   const z = Math.pow(70, E.inCubic(zt));
   const rot = -4 * E.inCubic(zt);
   $("#s1cam").setAttribute("transform", `translate(${h.cx} ${h.cy}) rotate(${rot}) scale(${z}) translate(${-h.cx} ${-h.cy})`);
-  // captions
   $("#s1capL").innerHTML = `<span class="dim">${scramble("VORWAHL / AREA CODE", f, 8, 14, 3)}</span><b>${scramble("BERLIN — KREUZBERG", f, 10, 18, 4)}</b>`;
   $("#s1capR").innerHTML = `<span class="dim">${scramble("52°29′N  13°24′E", f, 54, 10, 5)}</span><b>${scramble("*30.11.2000", f, 56, 10, 6)}</b>`;
   const capO = 1 - E.in(inv(62, 72, f));
@@ -721,15 +759,16 @@ function updS1(f) {
 }
 
 function updZip(f) {
-  const zip = $("#s2zip");
-  vis(zip, f >= 183 && f < 205);
-  zip.style.transform = `scaleX(${E.inOut(inv(183, 192, f))})`;
-  zip.style.opacity = f < 200 ? 1 : 1 - inv(200, 204, f);
+  const a = X.s2 - 17, zip = $("#s2zip");
+  vis(zip, f >= a && f < X.s2 + 5);
+  zip.style.transform = `scaleX(${E.inOut(inv(a, a + 9, f))})`;
+  zip.style.opacity = f < X.s2 ? 1 : 1 - inv(X.s2, X.s2 + 4, f);
 }
 function updS2(f) {
-  const el = $("#s2"); vis(el, f >= 50 && f < 206); if (f < 50 || f >= 206) return;
+  const el = $("#s2"), end = X.s2 + 6;
+  vis(el, f >= 50 && f < end); if (f < 50 || f >= end) return;
   const h = S.s1.hole;
-  // counter-zoom so the view through the portal "lands"
+  // counter-zoom so the view through the portal "lands" on his face
   const pz = E.out(inv(66, 116, f));
   const z = lerp(1.45, 1.0, pz);
   const br = lerp(.78, 1, E.out(inv(70, 104, f)));
@@ -738,31 +777,35 @@ function updS2(f) {
   zoom.style.transformOrigin = `${h.cx}px ${h.cy}px`;
   zoom.style.transform = `translate(${(h.cx - FACE[0]) * (1 - pz)}px, ${(h.cy - FACE[1]) * (1 - pz)}px) scale(${z})`;
   zoom.style.filter = br < .999 ? `brightness(${br})` : "none";
-  // background glow pulses with the kick
   $("#s2bg").style.transform = `scale(${1 + .025 * feat("kick", f)})`;
-  // name: letters rise, then the width axis opens on the snare (f150)
-  const wd = kf(f, [[100, 68], [ACC.s2 - 2, 74, E.lin], [ACC.s2 + 16, 118, E.out]]);
-  const tx = kf(f, [[100, 24], [206, -36, E.lin]]);
+  // name: letters rise, then the width axis opens on the snare
+  const wd = kf(f, [[T.s2, 68], [ACC.s2 - 2, 74, E.lin], [ACC.s2 + 16, 118, E.out]]);
+  const tx = kf(f, [[T.s2, 30], [end, -55, E.lin]]);
   [["#s2back", S.s2.back], ["#s2front", S.s2.front]].forEach(([sel, letters]) => {
     const t = $(sel);
     t.style.fontVariationSettings = `"wdth" ${wd.toFixed(2)}, "wght" 900`;
     t.style.transform = `translateX(-50%) translateX(${tx}px)`;
     letters.forEach((c, i) => {
-      const p = E.out(inv(100 + i * 2.4, 120 + i * 2.4, f));
+      const p = E.out(inv(T.s2 + i * 2.4, T.s2 + 20 + i * 2.4, f));
       c.style.transform = `translateY(${(1 - p) * 108}%)`;
     });
   });
   $("#s2front").style.opacity = .85;
-  // subject: slow push
-  $("#s2cut").style.transform = `scale(${lerp(1.0, 1.04, inv(100, 206, f))})`;
-  // caption
-  const cap = $("#s2cap");
-  cap.innerHTML = `<b>${scramble("CAN DAVID BAYRAM", f, 112, 16, 7)}</b>${scramble("*30.11.2000 · BERLIN-KREUZBERG", f, 120, 16, 8)}<br><span class="dim">${scramble("RAPPER · REGISSEUR", f, 128, 12, 9)}</span>`;
+  $("#s2cut").style.transform = `scale(${lerp(1.0, 1.07, inv(T.s2, end, f))})`;
+  $("#s2cap").innerHTML = `<b>${scramble("CAN DAVID BAYRAM", f, T.s2 + 12, 16, 7)}</b>${scramble("*30.11.2000 · BERLIN-KREUZBERG", f, T.s2 + 20, 16, 8)}<br><span class="dim">${scramble("RAPPER · REGISSEUR", f, T.s2 + 28, 12, 9)}</span>`;
+  // second act: the Hauseingang cover lands on the snare
+  const card = $("#s2card"), c0 = ACC.s2b - 5;
+  if (f < c0) card.style.opacity = 0;
+  else {
+    const cp = spring(f - c0, 190, 21);
+    card.style.opacity = 1;
+    card.style.transform = `translateX(${(1 - cp) * 720}px) rotate(${lerp(16, -5, cp)}deg) translateY(${Math.sin((f - c0) / 24) * 6}px)`;
+  }
 }
 
 function wavePoints(f) {
   const pts = [];
-  const amp = (f < 192 ? 0 : 1) * (40 + 210 * feat("mix", f) + 110 * feat("snare", f) + 60 * feat("kick", f)) * E.out(inv(192, 214, f));
+  const amp = (f < T.s3 - 8 ? 0 : 1) * (40 + 210 * feat("mix", f) + 110 * feat("snare", f) + 60 * feat("kick", f)) * E.out(inv(T.s3 - 8, T.s3 + 14, f));
   for (let i = 0; i <= 120; i++) {
     const x = i * 16;
     const taper = Math.pow(Math.sin(Math.PI * i / 120), .8);
@@ -771,18 +814,29 @@ function wavePoints(f) {
   }
   return pts;
 }
+function rollAt(C, f) { let v = C.values[0]; for (let i = 0; i < C.frames.length; i++) if (f >= C.frames[i]) v = C.values[i]; return v; }
+function peakCounter(el, numEl, C, land, f, fadeIn, out) {
+  numEl.textContent = rollAt(C, f);
+  const sp = f >= land ? spring(f - land, 300, 18) : 0;
+  const sc = f >= land ? 1 + .22 * (1 - sp) : 1;
+  const jit = (f >= C.frames[0] && f < land) ? (rnd(f * 7 + land) - .5) * 10 : 0;
+  el.style.transform = `translateY(${jit}px) scale(${sc})`;
+  el.style.opacity = fadeIn * out;
+  el.style.color = (f >= land && f < land + 6) ? "#ff4a0d" : "#f2eee5";
+}
 function updS3(f) {
-  const el = $("#s3"); vis(el, f >= 184 && f < 302); if (f < 184 || f >= 302) return;
-  const open = E.inOut(inv(190, 205, f)), half = (1 - open) * 541;
+  const el = $("#s3"), a = X.s2 - 16, b = X.s3 + 2;
+  vis(el, f >= a && f < b); if (f < a || f >= b) return;
+  const open = E.inOut(inv(T.s3 - 10, T.s3 + 5, f)), half = (1 - open) * 541;
   el.style.clipPath = half > .5 ? `inset(${half}px 0 ${half}px 0)` : "none";
   // waveform -> lightning morph
   let pts = wavePoints(f);
-  const m = E.inCubic(inv(284, 299, f));
+  const m = E.inCubic(inv(X.s3 - 16, X.s3 - 1, f));
   if (m > 0) {
     pts = pts.map((p, i) => {
-      const b = S.bolt[i];
+      const bp = S.bolt[i];
       const j = (rnd(f * 131 + i) - .5) * 40 * m * (1 - m) * 4;
-      return [lerp(p[0], b[0], m) + j, lerp(p[1], b[1], m) + j * .3];
+      return [lerp(p[0], bp[0], m) + j, lerp(p[1], bp[1], m) + j * .3];
     });
   }
   const d = ptsToD(pts);
@@ -791,67 +845,61 @@ function updS3(f) {
   $("#s3glow").setAttribute("opacity", .25 + .75 * m);
   $("#s3path").setAttribute("stroke", m > .2 ? "#e8ecff" : "#f2eee5");
   $("#s3path").setAttribute("stroke-width", 3 + 2 * m);
-  // title: tracking tightens in
+  const out = 1 - E.in(inv(X.s3 - 18, X.s3 - 6, f));
   const title = $("#s3title");
-  const ls = lerp(.5, .05, E.out(inv(198, 244, f)));
+  const ls = lerp(.5, .05, E.out(inv(T.s3 - 2, T.s3 + 44, f)));
   title.style.letterSpacing = ls + "em";
   title.style.transform = `translateX(-50%) translateX(${ls * .5}em)`;
-  title.style.opacity = E.out(inv(198, 210, f)) * (1 - E.in(inv(282, 294, f)));
-  // chart counter 100 -> 2, lands on the snare (f250)
-  const C = EV.counter; let idx = 0;
-  for (let i = 0; i < C.frames.length; i++) if (f >= C.frames[i]) idx = i;
-  const num = f < C.frames[0] ? 100 : C.values[idx];
-  $("#s3num").textContent = num;
-  const ce = $("#s3counter");
-  const land = f >= ACC.s3 ? spring(f - ACC.s3, 300, 18) : 0;
-  const sc = f >= ACC.s3 ? 1 + .22 * (1 - land) : 1;
-  const jit = (f >= C.frames[0] && f < ACC.s3) ? (rnd(f) - .5) * 10 : 0;
-  ce.style.transform = `translateY(${jit}px) scale(${sc})`;
-  ce.style.opacity = E.out(inv(208, 216, f)) * (1 - E.in(inv(282, 292, f)));
-  ce.style.color = (f >= ACC.s3 && f < ACC.s3 + 6) ? "#ff4a0d" : "#f2eee5";
+  title.style.opacity = E.out(inv(T.s3 - 2, T.s3 + 10, f)) * out;
+  // DE counter 100 -> 2 on the snare, then AT 6 and CH 13 roll in on the next snares
+  peakCounter($("#s3counter"), $("#s3num"), EV.counters.de, ACC.s3, f, E.out(inv(T.s3 + 8, T.s3 + 16, f)), out);
+  peakCounter($("#s3at"), $("#s3at .v"), EV.counters.at, ACC.s3b, f, E.out(inv(EV.counters.at.frames[0] - 3, EV.counters.at.frames[0] + 3, f)), out);
+  peakCounter($("#s3ch"), $("#s3ch .v"), EV.counters.ch, ACC.s3c, f, E.out(inv(EV.counters.ch.frames[0] - 3, EV.counters.ch.frames[0] + 3, f)), out);
+  $("#s3de").textContent = scramble("DE", f, EV.counters.at.frames[0] - 3, 4, 21);
+  $("#s3de").style.opacity = out;
   $("#s3cap").textContent = scramble("PLATZ 2 · DEUTSCHE SINGLE-CHARTS · 2020", f, ACC.s3 + 2, 14, 11);
-  $("#s3cap").style.opacity = 1 - E.in(inv(282, 292, f));
-  // cover card slides in
-  const cp = spring(f - 206, 170, 22);
+  $("#s3cap").style.opacity = out;
+  const cp = spring(f - (T.s3 + 6), 170, 22);
   const card = $("#s3card");
   card.style.transform = `translateX(${(1 - cp) * 760}px) rotate(${lerp(14, -4, cp)}deg) translateY(${Math.sin(f / 22) * 6}px)`;
-  card.style.opacity = (f >= 206 ? 1 : 0) * (1 - E.in(inv(282, 292, f)));
+  card.style.opacity = (f >= T.s3 + 6 ? 1 : 0) * out;
 }
 
 function lightning(f) {
   let L = 0;
-  for (const [f0, a] of [[300, 1], [304, .75], [309, .9], [331, .35], [338, .2]]) if (f >= f0) L += a * Math.exp(-(f - f0) / 2.4);
+  for (const [f0, a] of [[T.s4, 1], [T.s4 + 4, .75], [T.s4 + 9, .9], [T.s4 + 31, .35], [T.s4 + 38, .2],
+    [ACC.s4b, .95], [ACC.s4b + 4, .5], [ACC.s4c, .85], [ACC.s4c + 3, .45]]) if (f >= f0) L += a * Math.exp(-(f - f0) / 2.4);
   return clamp(L);
 }
 function updS4(f) {
-  const el = $("#s4"); vis(el, f >= 298 && f < 402); if (f < 298 || f >= 402) return;
+  const el = $("#s4"), a = T.s4 - 2, b = X.s4 + 2;
+  vis(el, f >= a && f < b); if (f < a || f >= b) return;
   const L = lightning(f);
-  $("#s4bolt").setAttribute("opacity", f >= 300 ? clamp(L * 1.25) : (f >= 298 ? 1 : 0));
+  const bolt = $("#s4bolt");
+  bolt.setAttribute("transform", f >= ACC.s4c - 1 ? "translate(420 0)" : f >= ACC.s4b - 1 ? "translate(1400 0) scale(-1 1)" : "");
+  bolt.setAttribute("opacity", f >= T.s4 ? clamp(L * 1.25) : 1);
   $("#s4clouds").style.opacity = .15 + .85 * L;
   // text revealed by the strikes
-  const lit = clamp(L * 1.6 + E.out(inv(312, 334, f)) * .94);
-  const col = (a) => `rgb(${Math.round(lerp(22, 242, a))},${Math.round(lerp(32, 238, a))},${Math.round(lerp(78, 229, a))})`;
-  $("#s4l1").style.color = col(lit); $("#s4l2").style.color = col(clamp(lit * (f < 304 ? .6 : 1)));
-  const track = lerp(-.005, .03, E.inCubic(inv(352, 398, f)));
-  $("#s4text").style.letterSpacing = track + "em";
-  // #1 slam on the snare
+  const lit = clamp(L * 1.6 + E.out(inv(T.s4 + 12, T.s4 + 34, f)) * .94);
+  const col = (k) => `rgb(${Math.round(lerp(22, 242, k))},${Math.round(lerp(32, 238, k))},${Math.round(lerp(78, 229, k))})`;
+  $("#s4l1").style.color = col(lit); $("#s4l2").style.color = col(clamp(lit * (f < T.s4 + 4 ? .6 : 1)));
+  $("#s4text").style.letterSpacing = lerp(-.005, .03, E.inCubic(inv(X.s4 - 48, X.s4 - 2, f))) + "em";
   const one = $("#s4one");
   if (f < ACC.s4) one.style.opacity = 0;
   else {
     const p = spring(f - ACC.s4, 320, 20);
     one.style.opacity = 1;
-    one.style.transform = `scale(${lerp(1.9, 1, p)}) rotate(${lerp(-12, 0, p)}deg)`;
+    one.style.transform = `scale(${lerp(1.9, 1, p) + .05 * Math.exp(-Math.max(0, f - ACC.s4b) / 6) * (f >= ACC.s4b ? 1 : 0)}) rotate(${lerp(-12, 0, p)}deg)`;
   }
   $("#s4cap").innerHTML = `${scramble("ERSTE NUMMER EINS", f, ACC.s4 + 6, 12, 12)}<br><span class="dim">${scramble("DEUTSCHLAND · JUNI 2021", f, ACC.s4 + 12, 12, 13)}</span>`;
-  // push-in + white-out into the drop
-  $("#s4cam").style.transform = `scale(${1 + .11 * E.inCubic(inv(340, 400, f))})`;
-  $("#s4white").style.opacity = E.inCubic(inv(384, 396, f));
-  // rain
+  $("#s4peaks").textContent = scramble("DE 1 · AT 2 · CH 3", f, ACC.s4b, 12, 22);
+  $("#s4cam").style.transform = `scale(${1 + .11 * E.inCubic(inv(X.s4 - 60, X.s4, f))})`;
+  $("#s4white").style.opacity = E.inCubic(inv(X.s4 - 16, X.s4 - 4, f));
   const ctx = S.rainCtx; ctx.clearRect(0, 0, W, H);
-  const speed = 1 + 1.4 * E.inCubic(inv(340, 396, f));
+  const speed = 1 + 1.4 * E.inCubic(inv(X.s4 - 60, X.s4 - 4, f));
   ctx.lineWidth = 1.4; ctx.lineCap = "round";
   for (const r of S.rain) {
-    const y = ((r.y0 + (f - 298) * r.sp * speed) % 1400) - 160;
+    const y = ((r.y0 + (f - a) * r.sp * speed) % 1400) - 160;
     const x = r.x - (y * .22);
     ctx.strokeStyle = `rgba(200,215,255,${(r.a * (0.6 + 1.6 * L)).toFixed(3)})`;
     ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - r.len * .22, y + r.len); ctx.stroke();
@@ -859,45 +907,57 @@ function updS4(f) {
 }
 
 function updS5(f) {
-  const el = $("#s5"); vis(el, f >= 398 && f < 508); if (f < 398 || f >= 508) return;
-  $("#s5white").style.opacity = 1 - E.out(inv(400, 412, f));
-  // outline draw-on, then fill on the snare
+  const el = $("#s5"), a = T.s5 - 2, b = X.s5 + 8;
+  vis(el, f >= a && f < b); if (f < a || f >= b) return;
+  $("#s5white").style.opacity = 1 - E.out(inv(T.s5, T.s5 + 12, f));
   S.s5.paths.forEach((p, i) => {
-    if (!p.__len) { p.__len = 4200; p.setAttribute("stroke-dasharray", p.__len); }
-    const dp = E.inOut(inv(400 + i * 3, ACC.s5 - 6 + i * 3, f));
-    p.setAttribute("stroke-dashoffset", p.__len * (1 - dp));
+    const dp = E.inOut(inv(T.s5 + i * 3, ACC.s5 - 6 + i * 3, f));
+    p.setAttribute("stroke-dashoffset", 4200 * (1 - dp));
     p.setAttribute("fill-opacity", E.out(inv(ACC.s5, ACC.s5 + 8, f)));
   });
-  $("#s5digits").setAttribute("transform", `translate(${-0.45 * (f - 400)} 0)`);
-  // tiles assemble
+  $("#s5digits").setAttribute("transform", `translate(${-0.45 * (f - T.s5)} 0)`);
   for (const t of S.tiles) {
     const l = f - t.delay;
     if (l < 0) { t.el.style.opacity = 0; continue; }
-    const p = spring(l, 210, 23);
+    const p = spring(l, 210, 23), q = 1 - p;
     t.el.style.opacity = clamp(l / 3);
-    const q = 1 - p;
     t.el.style.transform = `translate3d(${t.dx * q}px, ${t.dy * q}px, ${-600 * q}px) rotateX(${t.rx * q}deg) rotateY(${t.ry * q}deg) rotateZ(${t.rz * q}deg)`;
   }
-  const settled = f >= 446;
+  const settled = f >= T.s5 + 46;
   $("#s5face").style.opacity = settled ? 1 : 0;
   $("#s5tiles").style.visibility = settled ? "hidden" : "visible";
-  const floatY = f > 430 ? Math.sin((f - 430) / 26) * 7 : 0;
-  const pulse = f >= ACC.s5 ? 1 + .035 * Math.exp(-(f - ACC.s5) / 5) : 1;
-  $("#s5card").style.transform = `translateY(${floatY}px) scale(${pulse}) rotateY(${f > 430 ? Math.sin((f - 430) / 40) * 7 : 0}deg)`;
-  $("#s5shadow").style.opacity = E.out(inv(418, 436, f));
+  const floatY = f > T.s5 + 30 ? Math.sin((f - T.s5 - 30) / 26) * 7 : 0;
+  const hit = (h) => f >= h ? .035 * Math.exp(-(f - h) / 5) : 0;
+  const sway = f > T.s5 + 30 ? Math.sin((f - T.s5 - 30) / 40) * 7 : 0;
+  $("#s5card").style.transform = `translateY(${floatY}px) scale(${1 + hit(ACC.s5) + hit(ACC.s5c)}) rotateY(${sway}deg)`;
+  // second act: the album card flips over to the Mittelmeer single
+  $("#s5flip").style.transform = `rotateY(${180 * E.inOut(inv(ACC.s5b - 4, ACC.s5b + 12, f))}deg)`;
+  $("#s5shadow").style.opacity = E.out(inv(T.s5 + 18, T.s5 + 36, f));
   $("#s5shadow").style.transform = `translateY(${floatY}px)`;
-  // stamp
-  const st = $("#s5stamp");
+  // stamp: lands on the album, pops off before the flip, lands again on the single
+  const st = $("#s5stamp"), second = f >= ACC.s5c;
+  $("#s5ring").style.display = second ? "none" : "";
+  $("#s5ring2").style.display = second ? "" : "none";
   if (f < ACC.s5) st.style.opacity = 0;
-  else {
+  else if (f < ACC.s5b - 6) {
     const p = spring(f - ACC.s5, 330, 19);
     st.style.opacity = 1;
     st.style.transform = `translateY(${floatY}px) scale(${lerp(2.3, 1, p)}) rotate(${lerp(-34, -9, p)}deg)`;
     $("#s5ring").setAttribute("transform", `rotate(${(f - ACC.s5) * .9} 140 140)`);
+  } else if (!second) {
+    const q = E.in(inv(ACC.s5b - 6, ACC.s5b, f));
+    st.style.opacity = 1 - q;
+    st.style.transform = `translateY(${floatY}px) scale(${1 - .6 * q}) rotate(${-9 + 40 * q}deg)`;
+  } else {
+    const p = spring(f - ACC.s5c, 330, 19);
+    st.style.opacity = 1;
+    st.style.transform = `translateY(${floatY}px) scale(${lerp(2.3, 1, p)}) rotate(${lerp(24, -6, p)}deg)`;
+    $("#s5ring2").setAttribute("transform", `rotate(${(f - ACC.s5c) * .9} 140 140)`);
   }
-  $("#s5cap").textContent = scramble("DEBÜTALBUM — 13.06.2024 — PLATZ 1", f, ACC.s5 + 6, 16, 14);
-  // whip out left
-  const wp = E.inCubic(inv(486, 504, f));
+  $("#s5cap").textContent = f >= ACC.s5b + 4
+    ? scramble("MITTELMEER — SINGLE 2024 — PLATZ 1", f, ACC.s5b + 4, 16, 24)
+    : scramble("DEBÜTALBUM — 13.06.2024 — PLATZ 1", f, ACC.s5 + 6, 16, 14);
+  const wp = E.inCubic(inv(X.s5 - 14, X.s5 + 4, f));
   const inner = $("#s5inner");
   inner.style.transform = `translateX(${-2300 * wp}px)`;
   setBlur("mb5", 70 * wp, 0);
@@ -905,17 +965,18 @@ function updS5(f) {
 }
 
 function updS6(f) {
-  const el = $("#s6"); vis(el, f >= 488 && f < 602); if (f < 488 || f >= 602) return;
-  const ip = 1 - E.outCubic(inv(490, 510, f));
+  const el = $("#s6"), a = X.s5 - 12, b = X.s6 + 2;
+  vis(el, f >= a && f < b); if (f < a || f >= b) return;
+  const ip = 1 - E.outCubic(inv(T.s6 - 10, T.s6 + 10, f));
   const inner = $("#s6inner");
   inner.style.transform = `translateX(${2300 * ip}px)`;
   setBlur("mb6", 70 * ip, 0);
   inner.style.filter = ip > .01 ? "url(#mb6)" : "none";
-  $("#s6head").style.opacity = E.out(inv(498, 510, f));
-  $("#s6ghost").style.transform = `translateX(-50%) translateX(${(560 - f) * 1.2}px)`;
+  $("#s6head").style.opacity = E.out(inv(T.s6 - 2, T.s6 + 10, f));
+  $("#s6ghost").style.transform = `translateX(-50%) translateX(${(T.s6 + 60 - f) * 1.2}px)`;
   S.board.forEach((row, r) => {
-    const tp = E.out(inv(500 + r * 3, 512 + r * 3, f));
-    row.th.style.transform = `perspective(400px) rotateY(${(1 - tp) * 90}deg)`;
+    const tp = E.out(inv(T.s6 + r * 3, T.s6 + 12 + r * 3, f));
+    row.th.style.transform = `perspective(400px) rotateY(${(1 - tp) * 90}deg) scale(${r === 2 ? 1 + .06 * feat("kick", f) * inv(T.s6 + 30, T.s6 + 40, f) : 1})`;
     row.th.style.opacity = tp > 0 ? 1 : 0;
     row.cells.forEach((cell, c) => {
       const steps = cell.steps;
@@ -924,7 +985,7 @@ function updS6(f) {
       const cur = i >= 0 ? steps[i][1] : " ";
       const prev = i >= 1 ? steps[i - 1][1] : " ";
       const ph = i >= 0 ? (f - steps[i][0]) / 3 : 1;
-      if (cell.st.textContent !== cur) { cell.st.textContent = cur; }
+      if (cell.st.textContent !== cur) cell.st.textContent = cur;
       if (ph < 1) {
         cell.sb.textContent = prev; cell.sft.textContent = prev; cell.sfb.textContent = cur;
         if (ph < .5) {
@@ -937,84 +998,105 @@ function updS6(f) {
       } else {
         cell.sb.textContent = cur; cell.ft.style.display = "none"; cell.fb.style.display = "none";
       }
-      // highlight the LOUNGE MUSIK row before the flood
-      const hi = r === 3 && f >= 570 + c * .35;
+      // second act: a cursor scans rows 1-3 on the snares, then LOUNGE MUSIK lights up and floods
+      const scan = r < 3 && f >= ACC.s6[r] + c * .35 && f < ACC.s6[r] + 14 + c * .35;
+      const hi = scan || (r === 3 && f >= X.s6 - 30 + c * .35);
       cell.ce.classList.toggle("hi", hi);
     });
   });
-  // flood from the highlighted row to full frame
+  const np = $("#s6np");
+  np.style.opacity = E.out(inv(T.s6 + 30, T.s6 + 40, f));
+  np.style.transform = `scale(${1 + .6 * feat("kick", f)})`;
   const fl = $("#s6flood");
-  const fp = E.inOut(inv(582, 598, f));
-  vis(fl, f >= 582);
+  const fp = E.inOut(inv(X.s6 - 18, X.s6 - 2, f));
+  vis(fl, f >= X.s6 - 18);
   const r3 = { x: 136 + 98, y: 360 + 3 * 98, w: 25 * 62 - 6, h: 80 };
   fl.style.left = lerp(r3.x, -20, fp) + "px"; fl.style.top = lerp(r3.y, -20, fp) + "px";
   fl.style.width = lerp(r3.w, W + 40, fp) + "px"; fl.style.height = lerp(r3.h, H + 40, fp) + "px";
 }
 
 function updS7(f) {
-  const el = $("#s7"); vis(el, f >= 596 && f < 704); if (f < 596 || f >= 704) return;
-  const cp = spring(f - 598, 150, 21);
-  $("#s7cut").style.transform = `translateY(${(1 - cp) * 560}px) scale(${lerp(1.08, 1, cp) + .006 * feat("kick", f)})`;
+  const el = $("#s7"), a = T.s7 - 4, b = X.s7 + 4;
+  vis(el, f >= a && f < b); if (f < a || f >= b) return;
+  const cp = spring(f - (T.s7 - 2), 150, 21);
+  const push = .035 * E.inOut(inv(ACC.s7d, X.s7 - 14, f));
+  $("#s7cut").style.transform = `translateY(${(1 - cp) * 560}px) scale(${lerp(1.08, 1, cp) + .006 * feat("kick", f) + push})`;
   [S.s7.l1, S.s7.l2].forEach((letters, li) => letters.forEach((c, i) => {
-    const p = E.out(inv(602 + li * 6 + i * 2, 624 + li * 6 + i * 2, f));
+    const p = E.out(inv(T.s7 + 2 + li * 6 + i * 2, T.s7 + 24 + li * 6 + i * 2, f));
     c.style.transform = `translateY(${(1 - p) * 110}%) rotate(${(1 - p) * 8}deg)`;
   }));
-  S.s7.badges.forEach((b, i) => {
+  S.s7.badges.forEach((bd, i) => {
     const f0 = ACC.s7[i];
-    if (f < f0) { b.style.opacity = 0; return; }
+    if (f < f0) { bd.style.opacity = 0; return; }
     const p = spring(f - f0, 330, 17);
-    b.style.opacity = 1;
-    b.style.transform = `scale(${lerp(.3, 1, p)}) rotate(${lerp(-10, 0, p)}deg)`;
-    b.style.background = f - f0 < 4 ? "#f2eee5" : "#0b0b0b";
+    bd.style.opacity = 1;
+    bd.style.transform = `scale(${lerp(.3, 1, p)}) rotate(${lerp(-10, 0, p)}deg)`;
+    bd.style.background = f - f0 < 4 ? "#f2eee5" : "#0b0b0b";
   });
-  $("#s7flat").style.opacity = 1 - E.inOut(inv(598, 622, f));
-  $("#s7cap").textContent = scramble("ZWEITES STUDIOALBUM · JULI 2026", f, 612, 16, 15);
-  // tilt up to the sky
-  const tp = E.inCubic(inv(686, 702, f));
+  $("#s7flat").style.opacity = 1 - E.inOut(inv(T.s7 - 2, T.s7 + 22, f));
+  $("#s7cap").textContent = scramble("ZWEITES STUDIOALBUM · JULI 2026", f, T.s7 + 12, 16, 15);
+  // second act: tracklist ticker, Goldrichtig highlighted
+  const tk = $("#s7tick"), t0 = ACC.s7d - 6;
+  const rv = E.out(inv(t0, t0 + 16, f));
+  tk.style.opacity = f >= t0 ? 1 : 0;
+  tk.style.clipPath = `inset(0 ${((1 - rv) * 100).toFixed(2)}% 0 0)`;
+  $("#s7run").style.transform = `translateX(${-(((f - t0) * 3.4) % S.s7.runW) - 40}px)`;
+  const tp = E.inCubic(inv(X.s7 - 14, X.s7 + 2, f));
   $("#s7inner").style.transform = `translateY(${1250 * tp}px)`;
   setBlur("mb7", 0, 60 * tp);
   $("#s7inner").style.filter = tp > .01 ? "url(#mb7)" : "none";
 }
 
 function updS8(f) {
-  const el = $("#s8"); vis(el, f >= 688 && f < 802); if (f < 688 || f >= 802) return;
-  const ip = 1 - E.outCubic(inv(688, 710, f));
+  const el = $("#s8"), a = T.s8 - 12, b = X.s8 + 2;
+  vis(el, f >= a && f < b); if (f < a || f >= b) return;
+  const ip = 1 - E.outCubic(inv(T.s8 - 12, T.s8 + 10, f));
   el.style.transform = `translateY(${-1250 * ip}px)`;
   setBlur("mb8", 0, 60 * ip);
   $("#s8inner").style.filter = ip > .01 ? "url(#mb8)" : "none";
-  const t = f - 700;
-  $("#s8sky").style.transform = `translateY(${t * .55}px) scale(${1 + t * .0006})`;
-  $("#s8cut").style.transform = `translateY(${t * .8}px)`;
+  const t = f - T.s8;
+  $("#s8sky").style.transform = `translateY(${t * .32}px) scale(${1 + t * .0004})`;
+  $("#s8cut").style.transform = `translateY(${t * .42}px)`;
   $("#s8rays").style.transform = `rotate(${f * .18}deg)`;
-  [S.s8.l1, S.s8.l2].forEach((letters, li) => letters.forEach((c, i) => {
-    const p = E.out(inv(704 + li * 8 + i * 1.6, 728 + li * 8 + i * 1.6, f));
-    c.style.transform = `translateY(${(1 - p) * 110}%)`;
+  // headline A rolls up and out on the snare, headline B rolls in
+  S.s8.a.forEach((letters, li) => letters.forEach((c, i) => {
+    const p = E.out(inv(T.s8 + 4 + li * 8 + i * 1.6, T.s8 + 28 + li * 8 + i * 1.6, f));
+    const q = E.in(inv(ACC.s8b - 10 + li * 3 + i * .8, ACC.s8b + 2 + li * 3 + i * .8, f));
+    c.style.transform = `translateY(${((1 - p) * 110 - q * 112).toFixed(2)}%)`;
   }));
-  $("#s8cap").innerHTML = `<b>${scramble("TFELD — TEMPELHOFER FELD", f, 716, 16, 16)}</b>${scramble("22.08.2026 · HIP-HOP-HEADLINER", f, 724, 16, 17)}`;
-  const fl = E.in(inv(774, 797, f));
+  S.s8.b.forEach((letters, li) => letters.forEach((c, i) => {
+    const p = E.out(inv(ACC.s8b + li * 8 + i * 1.6, ACC.s8b + 24 + li * 8 + i * 1.6, f));
+    c.style.transform = `translateY(${((1 - p) * 110).toFixed(2)}%)`;
+  }));
+  $("#s8cap").innerHTML = f < ACC.s8b
+    ? `<b>${scramble("HIMMEL ÜBER BERLIN", f, T.s8 + 16, 14, 16)}</b>${scramble("MIXTAPE · 28.09.2022", f, T.s8 + 24, 14, 17)}`
+    : `<b>${scramble("TFELD — TEMPELHOFER FELD", f, ACC.s8b + 4, 16, 26)}</b>${scramble("22.08.2026 · HIP-HOP-HEADLINER", f, ACC.s8b + 12, 16, 27)}`;
+  const fl = E.in(inv(X.s8 - 26, X.s8 - 3, f));
   $("#s8flare").style.opacity = fl;
   $("#s8flare").style.transform = `scale(${.4 + 1.2 * fl})`;
 }
 
 function updS9(f) {
-  const el = $("#s9"); vis(el, f >= 800); if (f < 800) return;
+  const el = $("#s9"); vis(el, f >= T.s9); if (f < T.s9) return;
+  const t0 = T.s9;
   const logo = $("#s9logo");
-  const ls = lerp(.34, .025, E.out(inv(800, 850, f)));
+  const ls = lerp(.34, .025, E.out(inv(t0, t0 + 50, f)));
   logo.style.letterSpacing = ls + "em";
-  logo.style.transform = `translateX(-50%) translateX(${ls / 2}em) scale(${lerp(1.06, 1, E.out(inv(800, 860, f)))})`;
+  const sc = lerp(1.06, 1, E.out(inv(t0, t0 + 60, f))) * (1 + .025 * inv(t0 + 60, X.s9, f));
+  logo.style.transform = `translateX(-50%) translateX(${ls / 2}em) scale(${sc})`;
   const n = S.s9.letters.length;
   S.s9.letters.forEach((c, i) => {
     const dd = Math.abs(i - (n - 1) / 2);
-    const p = E.out(inv(800 + dd * 2.2, 818 + dd * 2.2, f));
+    const p = E.out(inv(t0 + dd * 2.2, t0 + 18 + dd * 2.2, f));
     c.style.transform = `translateY(${(1 - p) * 108}%)`;
   });
-  $("#s9line").style.transform = `scaleX(${E.inOut(inv(812, 834, f))})`;
+  $("#s9line").style.transform = `scaleX(${E.inOut(inv(t0 + 12, t0 + 34, f))})`;
   S.s9.words.forEach((w, i) => {
-    const p = E.out(inv(826 + i * 4, 846 + i * 4, f));
+    const p = E.out(inv(t0 + 26 + i * 4, t0 + 46 + i * 4, f));
     w.style.opacity = p; w.style.transform = `translateY(${(1 - p) * 24}px)`; w.style.filter = p < .99 ? `blur(${(1 - p) * 10}px)` : "none";
   });
-  $("#s9small").textContent = scramble("BERLIN · 030 · KREUZBERG", f, 842, 14, 18);
-  $("#s9fan").textContent = scramble("UNOFFIZIELLES FAN-EDIT", f, 846, 12, 19);
+  $("#s9small").textContent = scramble("BERLIN · 030 · KREUZBERG", f, t0 + 42, 14, 18);
+  $("#s9fan").textContent = scramble("UNOFFIZIELLES FAN-EDIT", f, t0 + 46, 12, 19);
 }
 
 function setBlur(id, sx, sy) {
@@ -1028,18 +1110,19 @@ function setBlur(id, sx, sy) {
   flt.firstChild.setAttribute("stdDeviation", `${sx.toFixed(2)} ${sy.toFixed(2)}`);
 }
 
+function segAt(list, f) { let i = 0; for (let k = 0; k < list.length; k++) if (f >= list[k][0]) i = k; return i; }
 function updHUD(f) {
   const ink = HUD_INK.some(([a, b]) => f >= a && f < b);
   $("#hud").style.setProperty("--hud", ink ? "#0b0b0b" : "#f2eee5");
   const ss = Math.floor(f / FPS), ff = f % FPS;
-  $("#tc").textContent = f >= 852 ? "ANRUF BEENDET" : `00:00:${String(ss).padStart(2, "0")}:${String(ff).padStart(2, "0")}`;
+  $("#tc").textContent = f >= BUSY[0] ? "ANRUF BEENDET" : `00:00:${String(ss).padStart(2, "0")}:${String(ff).padStart(2, "0")}`;
   const names = ["kick", "bass", "snare", "hats", "lead"];
   S.vu.forEach((b, i) => { b.style.height = (3 + 13 * feat(names[i], f)).toFixed(1) + "px"; });
-  // chapter (scrambles on change)
-  let ci = 0; for (let i = 0; i < CHAPTERS.length; i++) if (f >= CHAPTERS[i][0]) ci = i;
+  const ci = segAt(CHAPTERS, f);
   $("#chapter").textContent = scramble(CHAPTERS[ci][1], f, CHAPTERS[ci][0], 10, 40 + ci);
-  // year odometer
-  let yi = 0; for (let i = 0; i < YEARS.length; i++) if (f >= YEARS[i][0]) yi = i;
+  const ni = segAt(NOWPLAYING, f);
+  $("#np").textContent = scramble(NOWPLAYING[ni][1], f, NOWPLAYING[ni][0], 12, 60 + ni);
+  const yi = segAt(YEARS, f);
   const from = yi > 0 ? YEARS[yi - 1][1] : YEARS[0][1], to = YEARS[yi][1];
   const p = E.out(inv(YEARS[yi][0], YEARS[yi][0] + 16, f));
   const fd = String(from).split("").map(Number), td = String(to).split("").map(Number);
@@ -1055,10 +1138,12 @@ function renderFrame(f) {
   const [sx, sy] = shakeAt(f);
   $("#world").style.transform = `translate(${sx.toFixed(2)}px, ${sy.toFixed(2)}px)`;
   $("#flash").style.opacity = flashAt(f).toFixed(3);
-  $("#black").style.opacity = E.inOut(inv(882, 899, f)).toFixed(3);
-  const whiteness = Math.max(flashAt(f), f >= 384 && f < 400 ? E.inCubic(inv(384, 396, f)) : 0,
-    f >= 400 && f < 412 ? 1 - E.out(inv(400, 412, f)) : 0, f >= 774 && f < 800 ? E.in(inv(774, 797, f)) : 0);
-  const vbase = (f >= 400 && f < 497) ? .25 : (f >= 596 && f < 700 ? .7 : 1);
+  $("#black").style.opacity = E.inOut(inv(FRAMES - 18, FRAMES - 1, f)).toFixed(3);
+  const whiteness = Math.max(flashAt(f),
+    f >= X.s4 - 16 && f < X.s4 ? E.inCubic(inv(X.s4 - 16, X.s4 - 4, f)) : 0,
+    f >= T.s5 && f < T.s5 + 12 ? 1 - E.out(inv(T.s5, T.s5 + 12, f)) : 0,
+    f >= X.s8 - 26 && f < X.s8 ? E.in(inv(X.s8 - 26, X.s8 - 3, f)) : 0);
+  const vbase = (f >= T.s5 && f < X.s5 - 3) ? .25 : (f >= T.s7 - 4 && f < X.s7 ? .7 : 1);
   $("#vignette").style.opacity = (vbase * (1 - whiteness)).toFixed(3);
   lastF = f;
 }
@@ -1072,12 +1157,10 @@ async function boot() {
   await document.fonts.load('900 100px "ArchivoV"'); await document.fonts.load('italic 100px "Serif"');
   await document.fonts.load('500 20px "Mono"'); await document.fonts.ready;
   buildS1(); buildS2(); buildS3(); buildS4(); buildS5(); buildS6(); buildS7(); buildS8(); buildS9(); buildHUD();
-  // wait for every raster to decode
   const imgs = [...document.querySelectorAll("img")];
   await Promise.all(imgs.map(i => i.decode().catch(() => {})));
   await Promise.all(["portrait.jpg", "album_2000.jpg", "sommergewitter.jpg", "mittelmeer.jpg", "gruenewuerfelflow.jpg", "lounge_thumb.jpg"]
     .map(n => { const i = new Image(); i.src = "assets/img/" + n; return i.decode().catch(() => {}); }));
-  // fit preview
   const stage = $("#stage");
   const fit = () => {
     if (render) { stage.style.transform = "none"; return; }
@@ -1085,17 +1168,20 @@ async function boot() {
     stage.style.transform = `translate(${(innerWidth - W * s) / 2}px, ${(innerHeight - 44 - H * s) / 2}px) scale(${s})`;
   };
   fit(); addEventListener("resize", fit);
+  window.__frames = FRAMES;
   window.__seek = (f) => { renderFrame(f); return f; };
   window.__maTimeline = { duration: FRAMES / FPS, fps: FPS, seek: (t) => renderFrame(t * FPS) };
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  renderFrame(reduce && !render ? 840 : 0);
+  renderFrame(reduce && !render ? T.s9 + 60 : 0);
   // preview transport (audio-locked)
   const audio = $("#audio"), btn = $("#play"), scrub = $("#scrub"), uitc = $("#uitc");
+  scrub.max = FRAMES - 1;
+  const show = (f) => { scrub.value = f; uitc.textContent = `${f} / ${FRAMES - 1}`; };
   let playing = false;
   const tick = () => {
     if (!playing) return;
     const f = Math.floor(audio.currentTime * FPS);
-    renderFrame(f); scrub.value = f; uitc.textContent = `${f} / 899`;
+    renderFrame(f); show(f);
     if (audio.ended || f >= FRAMES - 1) { playing = false; btn.textContent = "▶ Play"; return; }
     requestAnimationFrame(tick);
   };
@@ -1104,11 +1190,12 @@ async function boot() {
     if (lastF >= FRAMES - 1) audio.currentTime = 0;
     audio.play(); playing = true; btn.textContent = "❚❚ Pause"; tick();
   };
-  scrub.oninput = () => { const f = +scrub.value; audio.currentTime = f / FPS; renderFrame(f); uitc.textContent = `${f} / 899`; };
+  scrub.oninput = () => { const f = +scrub.value; audio.currentTime = f / FPS; renderFrame(f); show(f); };
   addEventListener("keydown", e => {
     if (e.key === " ") { btn.click(); e.preventDefault(); }
-    if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const f = clamp(lastF + (e.key === "ArrowRight" ? 1 : -1), 0, FRAMES - 1); audio.currentTime = f / FPS; renderFrame(f); scrub.value = f; uitc.textContent = `${f} / 899`; }
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const f = clamp(lastF + (e.key === "ArrowRight" ? 1 : -1), 0, FRAMES - 1); audio.currentTime = f / FPS; renderFrame(f); show(f); }
   });
+  show(0);
   window.__ready = true;
 }
 boot();
