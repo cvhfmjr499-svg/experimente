@@ -1,0 +1,7 @@
+# copyrighted source images (re-create with tools/fetch_assets.sh + tools/prep_images.py)
+assets/img/
+# render outputs
+frames/
+out/
+audio/*.wav
+audio/*.mp3

@@ -1,0 +1,1115 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PASHANIM // 030</title>
+<style>
+@font-face { font-family: "ArchivoV"; src: url("assets/fonts/archivo-var.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
+@font-face { font-family: "Serif"; src: url("assets/fonts/instrument-serif-italic.woff2") format("woff2"); font-style: italic; }
+@font-face { font-family: "Serif"; src: url("assets/fonts/instrument-serif.woff2") format("woff2"); font-style: normal; }
+@font-face { font-family: "Mono"; src: url("assets/fonts/jetbrains-mono-var.woff2") format("woff2"); font-weight: 100 800; }
+
+:root {
+  --ink: #0b0b0b; --paper: #f2eee5; --orange: #ff4a0d; --sun: #ffc21a;
+  --navy: #060a1f; --volt: #5b78ff;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+#viewport { position: fixed; inset: 0; }
+#stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden;
+  background: var(--ink); transform-origin: 0 0; font-family: "Mono", monospace; color: var(--paper); }
+.layer { position: absolute; inset: 0; }
+.scene { position: absolute; inset: 0; overflow: hidden; display: none; }
+.abs { position: absolute; }
+.mono { font-family: "Mono", monospace; text-transform: uppercase; letter-spacing: .18em; white-space: pre; }
+.big { font-family: "ArchivoV", sans-serif; line-height: 1; white-space: nowrap; }
+.serif { font-family: "Serif", serif; font-style: italic; line-height: .95; white-space: nowrap; }
+.m { display: inline-block; overflow: hidden; vertical-align: top; }
+.m > span { display: inline-block; }
+
+/* ---------- HUD ---------- */
+#hud { position: absolute; inset: 0; z-index: 100; pointer-events: none; color: var(--hud, #f2eee5); }
+#hud .mk { position: absolute; width: 26px; height: 26px; border-color: currentColor; border-style: solid; opacity: .75; }
+#hud .mk.tl { left: 30px; top: 30px; border-width: 1.5px 0 0 1.5px; }
+#hud .mk.tr { right: 30px; top: 30px; border-width: 1.5px 1.5px 0 0; }
+#hud .mk.bl { left: 30px; bottom: 30px; border-width: 0 0 1.5px 1.5px; }
+#hud .mk.br { right: 30px; bottom: 30px; border-width: 0 1.5px 1.5px 0; }
+#hud .lbl { position: absolute; font-size: 14px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; white-space: pre; }
+#hudTL { left: 72px; top: 40px; }
+#hudTR { right: 72px; top: 40px; display: flex; gap: 18px; align-items: center; }
+#hudBL { left: 72px; bottom: 46px; }
+#hudBR { right: 72px; bottom: 42px; display: flex; align-items: flex-end; gap: 14px; }
+#hud .dim { opacity: .55; }
+#vu { display: flex; gap: 3px; align-items: flex-end; height: 16px; }
+#vu i { display: block; width: 3px; background: currentColor; height: 3px; }
+#year { display: flex; font-size: 30px; font-weight: 700; letter-spacing: .02em; line-height: 30px; height: 30px; }
+#year .dg { display: block; width: .62em; height: 30px; overflow: hidden; position: relative; }
+#year .strip { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; }
+#year .strip b { display: block; height: 30px; font-weight: 700; text-align: center; width: .62em; }
+#prog { position: absolute; left: 72px; right: 72px; bottom: 30px; height: 1.5px; }
+#prog i { display: block; height: 100%; background: currentColor; transform-origin: 0 50%; opacity: .8; }
+
+/* ---------- global overlays ---------- */
+#flash { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 90; pointer-events: none; }
+#black { position: absolute; inset: 0; background: #000; opacity: 0; z-index: 95; pointer-events: none; }
+#vignette { position: absolute; inset: 0; z-index: 89; pointer-events: none;
+  background: radial-gradient(ellipse 75% 70% at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.42) 100%); }
+#world { position: absolute; inset: 0; }
+
+/* ---------- S1 030 ---------- */
+#s1 { z-index: 10; }
+#s1svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+.s1cap { position: absolute; font-size: 15px; line-height: 1.6; }
+.s1cap b { display: block; font-size: 22px; font-weight: 700; letter-spacing: .16em; }
+
+/* ---------- S2 PASHANIM ---------- */
+#s2 { z-index: 5; }
+#s2bg { background:
+  radial-gradient(circle at 64% 42%, #ff5a17 0%, #f23d05 18%, #a81f02 38%, #3a0d03 60%, #100604 82%); }
+#s2dots { opacity: .16; mix-blend-mode: multiply;
+  background-image: radial-gradient(circle, #000 1.3px, transparent 1.7px); background-size: 9px 9px; }
+#s2cut { position: absolute; left: 388px; top: -117px; width: 1490px; height: 1490px; transform-origin: 862px 587px; }
+.bigname { position: absolute; left: 960px; top: 268px; font-weight: 900; color: var(--paper); }
+.bigname.outline { color: transparent; -webkit-text-stroke: 2px var(--paper); }
+#s2cap { left: 96px; top: 846px; font-size: 16px; line-height: 1.75; }
+#s2cap b { display: block; font-size: 26px; font-weight: 700; letter-spacing: .14em; }
+#s2zip { position: absolute; left: 0; top: 539px; width: 1920px; height: 3px; background: var(--paper);
+  transform-origin: 0 50%; z-index: 22; display: none; box-shadow: 0 0 18px rgba(255,255,255,.6); }
+
+/* ---------- S3 AIRWAVES ---------- */
+#s3 { z-index: 20; background: linear-gradient(#0b0b0b, #0f1218); }
+#s3svg { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+#s3title { left: 960px; top: 150px; font-weight: 250; color: var(--paper); }
+#s3counter { left: 100px; top: 560px; font-family: "ArchivoV"; font-weight: 900; font-size: 400px; line-height: 1;
+  font-variation-settings: "wdth" 62, "wght" 900; display: flex; align-items: flex-start; transform-origin: 0 100%; }
+#s3counter .h { font-size: .42em; margin-top: .08em; margin-right: .04em; color: var(--orange); }
+#s3cap { left: 112px; top: 958px; font-size: 16px; }
+#s3card { left: 1384px; top: 586px; width: 380px; height: 380px; transform-origin: 50% 100%;
+  box-shadow: 0 30px 60px rgba(0,0,0,.55); }
+#s3card img { width: 100%; height: 100%; display: block; }
+#s3card .tag { position: absolute; left: 0; top: -34px; font-size: 13px; }
+
+/* ---------- S4 SOMMERGEWITTER ---------- */
+#s4 { z-index: 30; background: radial-gradient(ellipse 120% 90% at 60% 0%, #16245c 0%, #0a1236 40%, #050817 78%); }
+#s4cam { position: absolute; inset: 0; transform-origin: 960px 540px; }
+#s4clouds { opacity: .0; background:
+  radial-gradient(ellipse 30% 18% at 20% 12%, rgba(150,170,255,.55), transparent 70%),
+  radial-gradient(ellipse 34% 20% at 62% 8%, rgba(170,190,255,.6), transparent 70%),
+  radial-gradient(ellipse 26% 16% at 88% 20%, rgba(140,160,255,.45), transparent 70%); }
+#s4rain { position: absolute; inset: 0; }
+#s4svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+#s4text { left: 104px; top: 196px; }
+#s4text .ln { display: block; font-size: 292px; line-height: .86; font-weight: 900; letter-spacing: -.005em; }
+#s4one { left: 1338px; top: 262px; font-weight: 900; font-size: 520px; color: var(--orange); transform-origin: 50% 70%;
+  font-variation-settings: "wdth" 62, "wght" 900; }
+#s4cap { left: 1362px; top: 860px; font-size: 18px; line-height: 1.7; }
+#s4white { position: absolute; inset: 0; background: #fff; opacity: 0; }
+
+/* ---------- S5 2000 ---------- */
+#s5 { z-index: 40; color: var(--ink); }
+#s5inner { position: absolute; inset: 0; background: var(--paper); }
+#s5grid { opacity: .08; background-image:
+  linear-gradient(var(--ink) 1px, transparent 1px), linear-gradient(90deg, var(--ink) 1px, transparent 1px);
+  background-size: 60px 60px; background-position: 0 0; }
+#s5svg { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: visible; }
+#s5card { position: absolute; left: 660px; top: 196px; width: 600px; height: 600px; perspective: 1400px; }
+#s5tiles { position: absolute; inset: 0; transform-style: preserve-3d; }
+.tile { position: absolute; width: 120px; height: 120px; background-size: 600px 600px; backface-visibility: hidden; }
+#s5shadow { position: absolute; left: 660px; top: 196px; width: 600px; height: 600px; box-shadow: 0 40px 80px rgba(0,0,0,.35); opacity: 0; }
+#s5stamp { position: absolute; left: 1120px; top: 92px; width: 280px; height: 280px; transform-origin: 50% 50%; }
+#s5cap { left: 0; width: 1920px; text-align: center; top: 838px; font-size: 18px; font-weight: 600; }
+#s5white { position: absolute; inset: 0; background: #fff; }
+
+/* ---------- S6 NR.1 BOARD ---------- */
+#s6 { z-index: 50; }
+#s6inner { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, #1d1d1d 0%, #0d0d0d 70%); }
+#s6board { position: absolute; inset: 0; transform: scale(1.04); transform-origin: 960px 540px; }
+#s6ghost { left: 960px; top: 260px; font-size: 600px; font-weight: 900; color: transparent; -webkit-text-stroke: 1.5px rgba(242,238,229,.09);
+  font-variation-settings: "wdth" 125, "wght" 900; }
+#s6head { left: 136px; top: 290px; font-size: 16px; display: flex; gap: 40px; width: 1648px; justify-content: space-between; }
+.row { position: absolute; left: 136px; height: 80px; display: flex; gap: 6px; align-items: center; }
+.thumb { width: 80px; height: 80px; margin-right: 18px; background-size: cover; transform-origin: 50% 50%; }
+.cell { position: relative; width: 56px; height: 80px; perspective: 300px; }
+.cell .half { position: absolute; left: 0; width: 56px; height: 40px; overflow: hidden; background: #1e1e1e;
+  backface-visibility: hidden; }
+.cell .half.t { top: 0; border-radius: 6px 6px 0 0; transform-origin: 50% 100%; }
+.cell .half.b { top: 40px; border-radius: 0 0 6px 6px; transform-origin: 50% 0%; }
+.cell .half span { position: absolute; left: 0; width: 56px; height: 80px; line-height: 80px; text-align: center;
+  font-family: "ArchivoV"; font-size: 54px; font-weight: 800; font-variation-settings: "wdth" 90, "wght" 800; color: var(--paper); }
+.cell .half.b span { top: -40px; }
+.cell .half.t span { top: 0; }
+.cell .seam { position: absolute; left: 0; top: 39px; width: 56px; height: 2px; background: #050505; z-index: 5; }
+.cell.hi .half { background: var(--orange); }
+.cell.hi .half span { color: var(--ink); }
+.cell.pk .half span { color: var(--orange); }
+.cell.hi.pk .half span { color: var(--ink); }
+#s6flood { position: absolute; background: var(--orange); display: none; }
+
+/* ---------- S7 LOUNGE MUSIK ---------- */
+#s7 { z-index: 60; }
+#s7inner { position: absolute; inset: 0; background: linear-gradient(115deg, #ff4a0d 0%, #ff5c0a 45%, #ff8a00 78%, #ffb000 100%); }
+#s7grain { opacity: .22; mix-blend-mode: multiply;
+  background-image: radial-gradient(circle, rgba(0,0,0,.9) 1px, transparent 1.6px); background-size: 7px 7px; }
+#s7cut { position: absolute; left: 840px; top: 0; width: 1080px; height: 1080px; transform-origin: 50% 100%; }
+#s7title { left: 98px; top: 150px; color: var(--paper); }
+#s7title .ln { display: block; font-size: 300px; }
+#s7badges { left: 104px; top: 760px; display: flex; gap: 18px; }
+.badge { height: 64px; padding: 0 26px; display: flex; align-items: center; gap: 14px; background: var(--ink); color: var(--paper);
+  font-family: "Mono"; font-weight: 800; font-size: 26px; letter-spacing: .08em; border-radius: 40px; transform-origin: 50% 50%; }
+.badge em { font-style: normal; color: var(--orange); }
+#s7cap { left: 110px; top: 868px; font-size: 18px; font-weight: 600; color: var(--ink); }
+
+/* ---------- S8 HIMMEL / TEMPELHOF ---------- */
+#s8 { z-index: 70; background: #3d8bff; }
+#s8inner { position: absolute; inset: 0; }
+#s8sky { position: absolute; left: -40px; top: -560px; width: 2000px; height: 2000px; filter: saturate(1.45) contrast(1.06); }
+#s8shade { background: linear-gradient(90deg, rgba(12,62,190,.62) 0%, rgba(12,62,190,.36) 36%, rgba(12,62,190,0) 64%),
+  linear-gradient(0deg, rgba(12,52,170,.4) 0%, rgba(12,52,170,0) 42%); }
+#s8rays { position: absolute; left: 960px; top: -300px; width: 2600px; height: 2600px; margin-left: -1300px; margin-top: -1300px;
+  mix-blend-mode: screen; opacity: .22;
+  background: repeating-conic-gradient(from 0deg, rgba(255,255,255,.9) 0deg 4deg, rgba(255,255,255,0) 4deg 15deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0,0,0,.6) 30%, transparent 62%);
+          mask-image: radial-gradient(circle, #000 0%, rgba(0,0,0,.6) 30%, transparent 62%); }
+#s8cut { position: absolute; left: 720px; top: -150px; width: 1240px; height: 1240px; }
+#s8title { left: 100px; top: 210px; color: #fff; filter: drop-shadow(0 4px 26px rgba(0,30,110,.45)); }
+#s8title .ln { display: block; font-size: 190px; }
+#s8cap { left: 108px; top: 690px; font-size: 18px; line-height: 1.8; color: #fff; }
+#s8cap b { font-size: 26px; font-weight: 800; letter-spacing: .12em; display: block; }
+#s8flare { position: absolute; left: 960px; top: 60px; width: 3000px; height: 3000px; margin: -1500px 0 0 -1500px;
+  background: radial-gradient(circle, #fff 0%, #fff 22%, rgba(255,255,255,.0) 50%); opacity: 0; transform-origin: 50% 50%; }
+
+/* ---------- S9 END ---------- */
+#s9 { z-index: 80; background: var(--ink); }
+#s9logo { left: 960px; top: 372px; font-weight: 900; font-size: 196px; color: var(--paper); }
+#s9line { position: absolute; left: 960px; top: 616px; height: 1.5px; width: 620px; margin-left: -310px; background: var(--paper); transform-origin: 50% 50%; }
+#s9tag { left: 0; width: 1920px; text-align: center; top: 646px; font-size: 64px; color: var(--paper); }
+#s9tag span { display: inline-block; margin: 0 .12em; }
+#s9small { left: 0; width: 1920px; text-align: center; top: 772px; font-size: 15px; }
+#s9fan { left: 72px; bottom: 74px; font-size: 12px; opacity: .45; }
+
+/* ---------- preview UI ---------- */
+#ui { position: fixed; left: 0; right: 0; bottom: 0; height: 44px; display: flex; align-items: center; gap: 12px; padding: 0 14px;
+  background: rgba(0,0,0,.6); color: #ddd; font: 12px/1 "Mono", monospace; z-index: 1000; }
+#ui button { background: #222; color: #eee; border: 1px solid #444; border-radius: 4px; padding: 6px 10px; font: inherit; cursor: pointer; }
+#ui input[type=range] { flex: 1; }
+body.render #ui { display: none; }
+</style>
+</head>
+<body>
+<div id="viewport">
+<div id="stage">
+  <div id="world">
+
+    <!-- S1 · 030 -->
+    <section class="scene" id="s1">
+      <svg id="s1svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="tritone" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+            <feColorMatrix type="saturate" values="0"/>
+            <feComponentTransfer>
+              <feFuncR type="linear" slope="1.45" intercept="-0.16"/><feFuncG type="linear" slope="1.45" intercept="-0.16"/><feFuncB type="linear" slope="1.45" intercept="-0.16"/>
+            </feComponentTransfer>
+            <feComponentTransfer>
+              <feFuncR type="table" tableValues="0.035 1.0 0.96"/><feFuncG type="table" tableValues="0.035 0.27 0.94"/><feFuncB type="table" tableValues="0.035 0.04 0.90"/>
+            </feComponentTransfer>
+          </filter>
+        </defs>
+        <g id="s1cam">
+          <path id="s1bg" fill="#0b0b0b" fill-rule="evenodd" d="M-60 -60 H1980 V1140 H-60 Z"/>
+          <g id="s1digits"></g>
+        </g>
+      </svg>
+      <div class="s1cap mono" id="s1capL"></div>
+      <div class="s1cap mono" id="s1capR" style="text-align:right"></div>
+    </section>
+
+    <!-- S2 · PASHANIM -->
+    <section class="scene" id="s2">
+      <div class="layer" id="s2zoom">
+        <div class="layer" id="s2bg"></div>
+        <div class="layer" id="s2dots"></div>
+        <div class="big bigname" id="s2back">PASHANIM</div>
+        <img id="s2cut" src="assets/img/portrait_cut.png" alt="">
+        <div class="big bigname outline" id="s2front">PASHANIM</div>
+        <div class="abs mono" id="s2cap"></div>
+      </div>
+    </section>
+    <div id="s2zip"></div>
+
+    <!-- S3 · AIRWAVES -->
+    <section class="scene" id="s3">
+      <svg id="s3svg" viewBox="0 0 1920 1080">
+        <defs>
+          <filter id="glow3" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
+        </defs>
+        <path id="s3glow" fill="none" stroke="#5b78ff" stroke-width="10" filter="url(#glow3)" opacity="0"/>
+        <path id="s3path" fill="none" stroke="#f2eee5" stroke-width="3" stroke-linejoin="round"/>
+      </svg>
+      <div class="abs big" id="s3title">AIRWAVES</div>
+      <div class="abs" id="s3counter"><span class="h">#</span><span id="s3num">100</span></div>
+      <div class="abs mono" id="s3cap"></div>
+      <div class="abs" id="s3card"><div class="tag mono">SINGLE · 14.05.2020</div><img src="assets/img/airwaves.jpg" alt=""></div>
+    </section>
+
+    <!-- S4 · SOMMERGEWITTER -->
+    <section class="scene" id="s4">
+      <div id="s4cam">
+        <div class="layer" id="s4clouds"></div>
+        <canvas id="s4rain" width="1920" height="1080"></canvas>
+        <svg id="s4svg" viewBox="0 0 1920 1080">
+          <defs>
+            <filter id="glow4" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="14"/></filter>
+            <filter id="glow4b" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="4"/></filter>
+          </defs>
+          <g id="s4bolt" opacity="0">
+            <path id="s4boltGlow" fill="none" stroke="#5b78ff" stroke-width="26" filter="url(#glow4)" stroke-linejoin="round"/>
+            <path id="s4boltMid" fill="none" stroke="#a9bbff" stroke-width="9" filter="url(#glow4b)" stroke-linejoin="round"/>
+            <path id="s4boltCore" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"/>
+          </g>
+        </svg>
+        <div class="abs big" id="s4text"><span class="ln" id="s4l1">SOMMER</span><span class="ln" id="s4l2">GEWITTER</span></div>
+        <div class="abs big" id="s4one">#1</div>
+        <div class="abs mono" id="s4cap"></div>
+      </div>
+      <div id="s4white"></div>
+    </section>
+
+    <!-- S5 · 2000 -->
+    <section class="scene" id="s5">
+      <div id="s5inner">
+        <div class="layer" id="s5grid"></div>
+        <svg id="s5svg" viewBox="0 0 1920 1080"><g id="s5digits"></g></svg>
+        <div id="s5shadow"></div>
+        <div id="s5card"><div id="s5tiles"></div><img id="s5face" src="assets/img/album_2000.jpg" alt=""
+          style="position:absolute;inset:0;width:600px;height:600px;opacity:0"></div>
+        <svg id="s5stamp" viewBox="0 0 280 280">
+          <defs><path id="ring" d="M140,140 m-104,0 a104,104 0 1,1 208,0 a104,104 0 1,1 -208,0"/></defs>
+          <circle cx="140" cy="140" r="128" fill="#ff4a0d"/>
+          <circle cx="140" cy="140" r="82" fill="none" stroke="#0b0b0b" stroke-width="1.5" opacity=".5"/>
+          <g id="s5ring"><text font-family="Mono" font-size="17" font-weight="700" letter-spacing="3.6" fill="#0b0b0b">
+            <textPath href="#ring">ALBUM · PLATZ 1 · DEUTSCHLAND · 2024 · ALBUM · PLATZ 1 · </textPath></text></g>
+          <text x="140" y="172" text-anchor="middle" font-family="ArchivoV" font-weight="900" font-size="98" fill="#f2eee5"
+                style="font-variation-settings:'wdth' 70,'wght' 900">#1</text>
+        </svg>
+        <div class="abs mono" id="s5cap"></div>
+      </div>
+      <div id="s5white"></div>
+    </section>
+
+    <!-- S6 · NR. 1 -->
+    <section class="scene" id="s6">
+      <div id="s6inner">
+        <div class="abs big" id="s6ghost">NR.1</div>
+        <div id="s6board">
+          <div class="abs mono" id="s6head"><span>NR. 1 — DEUTSCHE CHARTS</span><span class="dim2">JAHR · TITEL · PLATZ</span></div>
+          <div id="s6rows"></div>
+        </div>
+      </div>
+      <div id="s6flood"></div>
+    </section>
+
+    <!-- S7 · LOUNGE MUSIK -->
+    <section class="scene" id="s7">
+      <div id="s7inner">
+        <div class="layer" id="s7flat" style="background:#ff4a0d"></div>
+        <div class="layer" id="s7grain"></div>
+        <div class="abs serif" id="s7title"><span class="ln" id="s7l1">Lounge</span><span class="ln" id="s7l2">Musik</span></div>
+        <img id="s7cut" src="assets/img/lounge_cut.png" alt="">
+        <div class="abs" id="s7badges">
+          <div class="badge"><em>#1</em>DE</div><div class="badge"><em>#1</em>AT</div><div class="badge"><em>#1</em>CH</div>
+        </div>
+        <div class="abs mono" id="s7cap"></div>
+      </div>
+    </section>
+
+    <!-- S8 · HIMMEL ÜBER BERLIN / TEMPELHOF -->
+    <section class="scene" id="s8">
+      <div id="s8inner">
+        <img id="s8sky" src="assets/img/sky_plate.jpg" alt="">
+        <div id="s8rays"></div>
+        <div class="layer" id="s8shade"></div>
+        <img id="s8cut" src="assets/img/himmel_cut.png" alt="">
+        <div class="abs serif" id="s8title"><span class="ln" id="s8l1">Himmel</span><span class="ln" id="s8l2">über Berlin.</span></div>
+        <div class="abs mono" id="s8cap"></div>
+      </div>
+      <div id="s8flare"></div>
+    </section>
+
+    <!-- S9 · END -->
+    <section class="scene" id="s9">
+      <div class="abs big" id="s9logo">PASHANIM</div>
+      <div id="s9line"></div>
+      <div class="abs serif" id="s9tag"></div>
+      <div class="abs mono" id="s9small"></div>
+      <div class="abs mono" id="s9fan"></div>
+    </section>
+  </div>
+
+  <div id="vignette"></div>
+  <div id="flash"></div>
+  <div id="black"></div>
+
+  <div id="hud">
+    <i class="mk tl"></i><i class="mk tr"></i><i class="mk bl"></i><i class="mk br"></i>
+    <div class="lbl" id="hudTL">PASHANIM <span class="dim">/ BERLIN 030</span></div>
+    <div class="lbl" id="hudTR"><span id="tc">00:00:00:00</span><span id="vu"><i></i><i></i><i></i><i></i><i></i></span></div>
+    <div class="lbl" id="hudBL"><span id="chapter"></span></div>
+    <div class="lbl" id="hudBR"><span class="dim" style="font-size:12px;margin-bottom:5px">JAHR</span><span id="year"></span></div>
+    <div id="prog"><i></i></div>
+  </div>
+</div>
+</div>
+
+<div id="ui">
+  <button id="play">▶ Play</button><span id="uitc">0 / 899</span>
+  <input id="scrub" type="range" min="0" max="899" value="0">
+</div>
+<audio id="audio" src="audio/score.wav" preload="auto"></audio>
+
+<script src="assets/data/glyphs.js"></script>
+<script src="assets/data/events.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+   PASHANIM // 030 — 15 s motion piece. Deterministic, frame-seekable.
+   window.__seek(frame) renders any frame; window.__maTimeline.seek(t)
+   follows the motion-anything freezable-timeline convention.
+   144 BPM -> 1 beat = 25 frames @ 60 fps, 1 bar = 100 frames.
+   ===================================================================== */
+const W = 1920, H = 1080, FPS = 60, FRAMES = 900;
+const EV = window.EVENTS, GL = window.GLYPHS;
+const $ = (s) => document.querySelector(s);
+const SVGNS = "http://www.w3.org/2000/svg";
+const svgEl = (tag, attrs = {}) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+/* ---------- math / easing (MOTION-SPEC tokens) ---------- */
+const clamp = (v, a = 0, b = 1) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, t) => a + (b - a) * t;
+const inv = (a, b, v) => clamp((v - a) / (b - a));
+function cubicBezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = t => ((ax * t + bx) * t + cx) * t, sy = t => ((ay * t + by) * t + cy) * t;
+  return x => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let lo = 0, hi = 1, t = x;
+    for (let i = 0; i < 40; i++) { const v = sx(t); if (Math.abs(v - x) < 1e-6) break; if (v < x) lo = t; else hi = t; t = (lo + hi) / 2; }
+    return sy(t);
+  };
+}
+const E = {
+  out: cubicBezier(0.16, 1, 0.3, 1),       // spec ease-out (default for entrances)
+  in: cubicBezier(0.4, 0, 1, 1),           // spec ease-in (exits)
+  inOut: cubicBezier(0.65, 0, 0.35, 1),    // spec ease-in-out (on-screen moves)
+  outExpo: t => t >= 1 ? 1 : 1 - Math.pow(2, -10 * t),
+  inExpo: t => t <= 0 ? 0 : Math.pow(2, 10 * t - 10),
+  inCubic: t => t * t * t, outCubic: t => 1 - Math.pow(1 - t, 3),
+  inQuart: t => t * t * t * t,
+  lin: t => t,
+};
+// damped spring (spec spring-soft = 170/26, spring-snappy = 300/30); t in frames
+function spring(fr, k = 170, c = 26) {
+  if (fr <= 0) return 0;
+  const t = fr / FPS, w0 = Math.sqrt(k), z = c / (2 * Math.sqrt(k));
+  if (z < 1) { const wd = w0 * Math.sqrt(1 - z * z); return 1 - Math.exp(-z * w0 * t) * (Math.cos(wd * t) + (z * w0 / wd) * Math.sin(wd * t)); }
+  return 1 - Math.exp(-w0 * t) * (1 + w0 * t);
+}
+function kf(f, keys) {
+  if (f <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++) {
+    const [f1, v1, e = E.inOut] = keys[i], [f0, v0] = keys[i - 1];
+    if (f <= f1) return lerp(v0, v1, e((f - f0) / (f1 - f0)));
+  }
+  return keys[keys.length - 1][1];
+}
+function rnd(seed) { let t = (seed + 0x6D2B79F5) | 0; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
+const feat = (name, f) => { const a = EV.features[name]; return a[Math.max(0, Math.min(FRAMES - 1, Math.round(f)))] || 0; };
+const vis = (el, on) => { const d = on ? "block" : "none"; if (el.style.display !== d) el.style.display = d; };
+const GLYPHSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#/·—";
+// decode/scramble text: chars resolve left->right between f0 and f0+dur
+function scramble(text, f, f0, dur, seed = 1) {
+  if (f < f0) return "";
+  let out = "";
+  const n = text.length;
+  for (let i = 0; i < n; i++) {
+    const ch = text[i];
+    const tReveal = f0 + (i / Math.max(1, n - 1)) * dur;
+    const tAppear = f0 + (i / Math.max(1, n - 1)) * dur * 0.45;
+    if (ch === " " || ch === "\n") { out += ch; continue; }
+    if (f >= tReveal) out += ch;
+    else if (f >= tAppear) out += GLYPHSET[Math.floor(rnd(seed * 997 + i * 31 + Math.floor(f / 2) * 7) * GLYPHSET.length)];
+    else out += " ";
+  }
+  return out;
+}
+function splitLetters(el) {
+  const txt = el.textContent; el.textContent = "";
+  return [...txt].map(ch => {
+    const m = document.createElement("span"); m.className = "m";
+    const c = document.createElement("span"); c.textContent = ch === " " ? " " : ch;
+    m.appendChild(c); el.appendChild(m); return c;
+  });
+}
+
+/* ---------- shared schedule ---------- */
+const FLASHES = [[0, .30, 5], [25, .30, 5], [50, .34, 5], [150, .16, 4], [250, .22, 5], [300, 1, 4], [304, .65, 4],
+  [309, .8, 5], [350, .38, 5], [425, .22, 4], [625, .12, 3], [650, .12, 3], [675, .12, 3]];
+const SHAKES = [[0, 9], [25, 9], [50, 11], [100, 5], [150, 6], [250, 6], [300, 15], [309, 6], [350, 12], [400, 16],
+  [425, 9], [625, 4], [650, 4], [675, 5], [800, 13]];
+const CHAPTERS = [[0, "01 — 030 BERLIN"], [100, "02 — CAN DAVID BAYRAM"], [200, "03 — AIRWAVES"], [300, "04 — SOMMERGEWITTER"],
+  [400, "05 — 2000"], [500, "06 — NR. 1"], [600, "07 — LOUNGE MUSIK"], [700, "08 — TEMPELHOFER FELD"], [800, "09 — PASHANIM"]];
+const YEARS = [[0, 2000], [204, 2020], [304, 2021], [404, 2024], [504, 2025], [604, 2026]];
+// HUD ink on light scenes
+const HUD_INK = [[400, 497, true], [592, 696, true]];
+
+/* =====================================================================
+   BUILD
+   ===================================================================== */
+const S = {};
+function buildS1() {
+  const g = GL.dial, k = 780 / 712, track = -34;
+  let xu = 0; const pos = [];
+  g.glyphs.forEach(gl => { pos.push(xu); xu += gl.advance + track; });
+  const totalU = xu - track, totalPx = totalU * k;
+  const x0 = (W - totalPx) / 2, base = 860;
+  S.s1 = { k, x0, base, totalPx, digits: [] };
+  // photo spanning all three digits (screen coords)
+  const img = { x: x0 - 40, y: base - 712 * k - 60, w: totalPx + 80 };
+  img.h = img.w; // square source
+  const root = $("#s1digits");
+  g.glyphs.forEach((gl, i) => {
+    const dx = x0 + pos[i] * k;
+    const grp = svgEl("g");
+    const d = gl.contours.join(" ");
+    const cp = svgEl("clipPath", { id: `s1cp${i}` }); cp.appendChild(svgEl("path", { d })); grp.appendChild(cp);
+    const fillG = svgEl("g", { "clip-path": `url(#s1cp${i})` });
+    const im = svgEl("image", { href: "assets/img/portrait.jpg", preserveAspectRatio: "xMidYMid slice",
+      x: (img.x - dx) / k, y: (img.y - base) / k, width: img.w / k, height: img.h / k, filter: "url(#tritone)" });
+    fillG.appendChild(svgEl("rect", { x: -100, y: -800, width: 700, height: 1000, fill: "#0b0b0b" }));
+    fillG.appendChild(im);
+    const tint = svgEl("rect", { x: -100, y: -800, width: 700, height: 1000, fill: "#ff4a0d", opacity: .0, style: "mix-blend-mode:multiply" });
+    fillG.appendChild(tint);
+    const solid = svgEl("path", { d, fill: "#f2eee5", opacity: 0 });
+    const outline = svgEl("path", { d, fill: "none", stroke: "#f2eee5", "stroke-width": 2.2, "vector-effect": "non-scaling-stroke", opacity: .9 });
+    grp.append(fillG, solid, outline);
+    root.appendChild(grp);
+    const bb = gl.bbox; // units, y-down
+    S.s1.digits.push({ grp, im, solid, tint, dx, cx: dx + (bb[0] + bb[2]) / 2 * k, cy: base + (bb[1] + bb[3]) / 2 * k, imgx: (img.x - dx) / k });
+  });
+  // portal: counter contour of the last "0" (2nd contour)
+  const last = g.glyphs[2];
+  const counterD = last.contours[1];
+  S.s1.counterD = counterD;
+  // counter bounds straight from the path data (getBBox is 0 while the scene is display:none)
+  const cb = pathBounds(counterD);
+  const d2 = S.s1.digits[2];
+  S.s1.hole = { cx: d2.dx + (cb.x + cb.width / 2) * k, cy: base + (cb.y + cb.height / 2) * k, w: cb.width * k, h: cb.height * k };
+  // captions
+  const capL = $("#s1capL"), capR = $("#s1capR");
+  capL.style.left = (x0 + 6) + "px"; capL.style.top = (base + 34) + "px";
+  capR.style.left = (x0 + totalPx - 520) + "px"; capR.style.width = "520px"; capR.style.top = (base + 34) + "px";
+}
+
+function fitFont(el, family, settings, targetW, weight = 900) {
+  const probe = document.createElement("span");
+  probe.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font-family:${family};font-size:100px;font-weight:${weight};font-variation-settings:${settings}`;
+  probe.textContent = el.textContent; document.body.appendChild(probe);
+  const w = probe.getBoundingClientRect().width; probe.remove();
+  return 100 * targetW / w;
+}
+
+function buildS2() {
+  const back = $("#s2back"), front = $("#s2front");
+  const fs = fitFont(back, "ArchivoV", `"wdth" 118, "wght" 900`, 1800);
+  [back, front].forEach(el => { el.style.fontSize = fs + "px"; });
+  S.s2 = { fs, back: splitLetters(back), front: splitLetters(front) };
+}
+
+function buildS3() {
+  const t = $("#s3title");
+  t.style.fontSize = fitFont(t, "ArchivoV", `"wdth" 125, "wght" 250`, 1240, 250) + "px";
+  t.style.fontVariationSettings = `"wdth" 125, "wght" 250`;
+  // lightning bolt polyline (shared with S4), 121 points
+  const pts = [];
+  let a = [1060, -60], b = [900, 1140];
+  let seg = [a, b];
+  for (let it = 0; it < 6; it++) {
+    const nx = [];
+    for (let i = 0; i < seg.length - 1; i++) {
+      const p = seg[i], q = seg[i + 1];
+      const mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2;
+      const len = Math.hypot(q[0] - p[0], q[1] - p[1]);
+      const off = (rnd(1000 + it * 97 + i * 13) - .5) * len * .42;
+      nx.push(p, [mx + off, my + (rnd(2000 + it * 31 + i) - .5) * len * .08]);
+    }
+    nx.push(seg[seg.length - 1]); seg = nx;
+  }
+  // resample to 121 points by index
+  for (let i = 0; i <= 120; i++) { const j = Math.round(i / 120 * (seg.length - 1)); pts.push(seg[j]); }
+  S.bolt = pts;
+  // branches for S4
+  S.branches = [];
+  [[38, 1], [64, -1], [86, 1]].forEach(([idx, dir], bi) => {
+    const br = [pts[idx]]; let [x, y] = pts[idx];
+    for (let j = 1; j < 9; j++) { x += dir * (18 + rnd(300 + bi * 17 + j) * 34); y += 26 + rnd(400 + bi * 11 + j) * 30; br.push([x, y]); }
+    S.branches.push(br);
+  });
+}
+function pathBounds(d) {
+  const toks = d.match(/[A-Za-z]|-?\d*\.?\d+(?:e[-+]?\d+)?/g);
+  let cmd = "M", idx = 0, x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (const t of toks) {
+    if (/[A-Za-z]/.test(t)) { cmd = t; idx = 0; continue; }
+    const v = parseFloat(t);
+    const isX = cmd === "H" || (cmd !== "V" && idx % 2 === 0);
+    if (isX) { x0 = Math.min(x0, v); x1 = Math.max(x1, v); } else { y0 = Math.min(y0, v); y1 = Math.max(y1, v); }
+    idx++;
+  }
+  return { x: x0, y: y0, width: x1 - x0, height: y1 - y0 };
+}
+function xformPath(d, sc, tx, ty) {
+  const toks = d.match(/[A-Za-z]|-?\d*\.?\d+(?:e[-+]?\d+)?/g);
+  const out = []; let cmd = "M", idx = 0;
+  for (const t of toks) {
+    if (/[A-Za-z]/.test(t)) { cmd = t; idx = 0; out.push(t); continue; }
+    const v = parseFloat(t);
+    const r = cmd === "H" ? sc * v + tx : cmd === "V" ? sc * v + ty : (idx % 2 === 0 ? sc * v + tx : sc * v + ty);
+    idx++; out.push(r.toFixed(2));
+  }
+  return out.join(" ");
+}
+const ptsToD = (pts) => "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L");
+
+function buildS4() {
+  S.s4 = { l1: $("#s4l1"), l2: $("#s4l2") };
+  const t = $("#s4text");
+  t.style.fontVariationSettings = `"wdth" 62, "wght" 900`;
+  const boltD = ptsToD(S.bolt) + " " + S.branches.map(ptsToD).join(" ");
+  ["#s4boltGlow", "#s4boltMid", "#s4boltCore"].forEach(s => $(s).setAttribute("d", boltD));
+  // rain drops
+  S.rain = Array.from({ length: 140 }, (_, i) => ({ x: rnd(i * 7 + 1) * 2300 - 200, y0: rnd(i * 13 + 2) * 1300, len: 50 + rnd(i * 5 + 3) * 110,
+    sp: 26 + rnd(i * 3 + 4) * 22, a: .08 + rnd(i * 11 + 5) * .22 }));
+  S.rainCtx = $("#s4rain").getContext("2d");
+}
+
+function buildS5() {
+  const g = GL.album, k = 1780 / g.glyphs.reduce((s, gl) => s + gl.advance, 0);
+  let x = 70; const base = 540 + 344 * k;
+  const root = $("#s5digits");
+  S.s5 = { paths: [] };
+  g.glyphs.forEach((gl, i) => {
+    const p = svgEl("path", { d: gl.contours.join(" "), transform: `translate(${x} ${base}) scale(${k})`, fill: "#0b0b0b", "fill-opacity": 0,
+      stroke: "#0b0b0b", "stroke-width": 3, "vector-effect": "non-scaling-stroke" });
+    root.appendChild(p);
+    x += gl.advance * k;
+    S.s5.paths.push(p);
+  });
+  requestAnimationFrame(() => {});
+  // tiles
+  const tiles = $("#s5tiles"); S.tiles = [];
+  for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) {
+    const t = document.createElement("div"); t.className = "tile";
+    t.style.left = c * 120 + "px"; t.style.top = r * 120 + "px";
+    t.style.backgroundImage = "url(assets/img/album_2000.jpg)"; t.style.backgroundPosition = `${-c * 120}px ${-r * 120}px`;
+    tiles.appendChild(t);
+    const i = r * 5 + c, dist = Math.hypot(r - 2, c - 2);
+    const ang = rnd(500 + i) * Math.PI * 2, rad = 700 + rnd(600 + i) * 600;
+    S.tiles.push({ el: t, delay: 400 + dist * 2.2 + rnd(700 + i) * 2, dx: Math.cos(ang) * rad, dy: Math.sin(ang) * rad * .7,
+      rx: (rnd(800 + i) - .5) * 220, ry: (rnd(900 + i) - .5) * 260, rz: (rnd(950 + i) - .5) * 90 });
+  }
+}
+
+function buildS6() {
+  const rowsEl = $("#s6rows");
+  const thumbs = ["sommergewitter", "mittelmeer", "gruenewuerfelflow", "lounge_thumb"];
+  S.board = EV.board.map((row, r) => {
+    const el = document.createElement("div"); el.className = "row"; el.style.top = (360 + r * 98) + "px";
+    const th = document.createElement("div"); th.className = "thumb"; th.style.backgroundImage = `url(assets/img/${thumbs[r]}.jpg)`;
+    el.appendChild(th);
+    const cells = row.cells.map((cell, c) => {
+      const ce = document.createElement("div"); ce.className = "cell";
+      if (c >= 23) ce.classList.add("pk");
+      ce.innerHTML = `<div class="half t"><span></span></div><div class="half b"><span></span></div>
+        <div class="half t flap"><span></span></div><div class="half b flap"><span></span></div><i class="seam"></i>`;
+      el.appendChild(ce);
+      const [ht, hb, ft, fb] = ce.querySelectorAll(".half");
+      return { ce, ht, hb, ft, fb, steps: cell.steps, st: ht.firstChild, sb: hb.firstChild, sft: ft.firstChild, sfb: fb.firstChild, last: null };
+    });
+    rowsEl.appendChild(el);
+    return { el, th, cells };
+  });
+}
+
+function buildS7() {
+  S.s7 = { l1: splitLetters($("#s7l1")), l2: splitLetters($("#s7l2")), badges: [...document.querySelectorAll(".badge")] };
+}
+function buildS8() {
+  S.s8 = { l1: splitLetters($("#s8l1")), l2: splitLetters($("#s8l2")) };
+}
+function buildS9() {
+  const logo = $("#s9logo");
+  logo.style.fontVariationSettings = `"wdth" 125, "wght" 900`;
+  S.s9 = { letters: splitLetters(logo) };
+  const tag = $("#s9tag");
+  S.s9.words = "Vom Hauseingang bis Tempelhof.".split(" ").map(w => { const s = document.createElement("span"); s.textContent = w; tag.appendChild(s); return s; });
+}
+function buildHUD() {
+  const y = $("#year"); S.yearDigits = [];
+  for (let i = 0; i < 4; i++) {
+    const dg = document.createElement("span"); dg.className = "dg";
+    const strip = document.createElement("span"); strip.className = "strip";
+    for (let n = 0; n <= 9; n++) { const b = document.createElement("b"); b.textContent = n; strip.appendChild(b); }
+    dg.appendChild(strip); y.appendChild(dg); S.yearDigits.push(strip);
+  }
+  S.vu = [...document.querySelectorAll("#vu i")];
+}
+
+/* =====================================================================
+   PER-FRAME UPDATE
+   ===================================================================== */
+function flashAt(f) {
+  let v = 0;
+  for (const [f0, a, d] of FLASHES) if (f >= f0 && f < f0 + d * 3) v = Math.max(v, a * Math.exp(-(f - f0) / d));
+  return v;
+}
+function shakeAt(f) {
+  let x = 0, y = 0;
+  for (const [f0, a] of SHAKES) {
+    const l = f - f0; if (l < 0 || l > 16) continue;
+    const amp = a * Math.exp(-l / 4.5);
+    x += (rnd(f0 * 3 + l * 17) - .5) * 2 * amp; y += (rnd(f0 * 5 + l * 23 + 9) - .5) * 2 * amp;
+  }
+  return [x, y];
+}
+
+function updS1(f) {
+  const el = $("#s1"); vis(el, f < 101); if (f >= 101) return;
+  const s = S.s1;
+  const LAND = [0, 25, 50];
+  s.digits.forEach((d, i) => {
+    const l = f - LAND[i];
+    if (l < 0) { d.grp.style.display = "none"; return; }
+    d.grp.style.display = "";
+    const p = E.outExpo(clamp(l / 10));
+    const sc = 1 + .34 * (1 - p), dy = 34 * (1 - p);
+    const tr = `translate(${d.cx} ${d.cy + dy}) scale(${sc}) translate(${-d.cx} ${-d.cy}) translate(${d.dx} ${s.base}) scale(${s.k})`;
+    d.grp.setAttribute("transform", tr);
+    if (i === 2) {
+      // portal hole = counter of this "0", baked into the background path (even-odd)
+      const sk = sc * s.k, tx = sc * (d.dx - d.cx) + d.cx, ty = sc * (s.base - d.cy) + d.cy + dy;
+      $("#s1bg").setAttribute("d", "M-60 -60 H1980 V1140 H-60 Z " + xformPath(s.counterD, sk, tx, ty));
+    }
+    d.solid.setAttribute("opacity", l < 2 ? 1 : clamp(1 - (l - 2) / 7));
+    d.im.setAttribute("x", d.imgx - f * 0.45);
+    d.tint.setAttribute("opacity", .0);
+  });
+  if (f < 50) $("#s1bg").setAttribute("d", "M-60 -60 H1980 V1140 H-60 Z");
+  // portal zoom into the counter of the last 0
+  const h = s.hole;
+  const zt = inv(64, 100, f);
+  const z = Math.pow(70, E.inCubic(zt));
+  const rot = -4 * E.inCubic(zt);
+  $("#s1cam").setAttribute("transform", `translate(${h.cx} ${h.cy}) rotate(${rot}) scale(${z}) translate(${-h.cx} ${-h.cy})`);
+  // captions
+  $("#s1capL").innerHTML = `<span class="dim">${scramble("VORWAHL / AREA CODE", f, 8, 14, 3)}</span><b>${scramble("BERLIN — KREUZBERG", f, 10, 18, 4)}</b>`;
+  $("#s1capR").innerHTML = `<span class="dim">${scramble("52°29′N  13°24′E", f, 54, 10, 5)}</span><b>${scramble("*30.11.2000", f, 56, 10, 6)}</b>`;
+  const capO = 1 - E.in(inv(62, 72, f));
+  $("#s1capL").style.opacity = capO; $("#s1capR").style.opacity = capO;
+}
+
+function updZip(f) {
+  const zip = $("#s2zip");
+  vis(zip, f >= 183 && f < 205);
+  zip.style.transform = `scaleX(${E.inOut(inv(183, 192, f))})`;
+  zip.style.opacity = f < 200 ? 1 : 1 - inv(200, 204, f);
+}
+function updS2(f) {
+  const el = $("#s2"); vis(el, f >= 50 && f < 206); if (f < 50 || f >= 206) return;
+  const h = S.s1.hole;
+  // counter-zoom so the view through the portal "lands"
+  const pz = E.out(inv(66, 116, f));
+  const z = lerp(1.45, 1.0, pz);
+  const br = lerp(.78, 1, E.out(inv(70, 104, f)));
+  const zoom = $("#s2zoom");
+  const FACE = [1250, 452];
+  zoom.style.transformOrigin = `${h.cx}px ${h.cy}px`;
+  zoom.style.transform = `translate(${(h.cx - FACE[0]) * (1 - pz)}px, ${(h.cy - FACE[1]) * (1 - pz)}px) scale(${z})`;
+  zoom.style.filter = br < .999 ? `brightness(${br})` : "none";
+  // background glow pulses with the kick
+  $("#s2bg").style.transform = `scale(${1 + .025 * feat("kick", f)})`;
+  // name: letters rise, then the width axis opens on the snare (f150)
+  const wd = kf(f, [[100, 68], [148, 74, E.lin], [166, 118, E.out]]);
+  const tx = kf(f, [[100, 24], [206, -36, E.lin]]);
+  [["#s2back", S.s2.back], ["#s2front", S.s2.front]].forEach(([sel, letters]) => {
+    const t = $(sel);
+    t.style.fontVariationSettings = `"wdth" ${wd.toFixed(2)}, "wght" 900`;
+    t.style.transform = `translateX(-50%) translateX(${tx}px)`;
+    letters.forEach((c, i) => {
+      const p = E.out(inv(100 + i * 2.4, 120 + i * 2.4, f));
+      c.style.transform = `translateY(${(1 - p) * 108}%)`;
+    });
+  });
+  $("#s2front").style.opacity = .85;
+  // subject: slow push
+  $("#s2cut").style.transform = `scale(${lerp(1.0, 1.04, inv(100, 206, f))})`;
+  // caption
+  const cap = $("#s2cap");
+  cap.innerHTML = `<b>${scramble("CAN DAVID BAYRAM", f, 112, 16, 7)}</b>${scramble("*30.11.2000 · BERLIN-KREUZBERG", f, 120, 16, 8)}<br><span class="dim">${scramble("RAPPER · REGISSEUR", f, 128, 12, 9)}</span>`;
+}
+
+function wavePoints(f) {
+  const pts = [];
+  const amp = (f < 192 ? 0 : 1) * (40 + 210 * feat("mix", f) + 110 * feat("snare", f) + 60 * feat("kick", f)) * E.out(inv(192, 214, f));
+  for (let i = 0; i <= 120; i++) {
+    const x = i * 16;
+    const taper = Math.pow(Math.sin(Math.PI * i / 120), .8);
+    const y = 540 + amp * taper * (Math.sin(x * .011 + f * .19) * .58 + Math.sin(x * .029 - f * .31) * .3 + Math.sin(x * .067 + f * .55) * .12);
+    pts.push([x, y]);
+  }
+  return pts;
+}
+function updS3(f) {
+  const el = $("#s3"); vis(el, f >= 184 && f < 302); if (f < 184 || f >= 302) return;
+  const open = E.inOut(inv(190, 205, f)), half = (1 - open) * 541;
+  el.style.clipPath = half > .5 ? `inset(${half}px 0 ${half}px 0)` : "none";
+  // waveform -> lightning morph
+  let pts = wavePoints(f);
+  const m = E.inCubic(inv(284, 299, f));
+  if (m > 0) {
+    pts = pts.map((p, i) => {
+      const b = S.bolt[i];
+      const j = (rnd(f * 131 + i) - .5) * 40 * m * (1 - m) * 4;
+      return [lerp(p[0], b[0], m) + j, lerp(p[1], b[1], m) + j * .3];
+    });
+  }
+  const d = ptsToD(pts);
+  $("#s3path").setAttribute("d", d);
+  $("#s3glow").setAttribute("d", d);
+  $("#s3glow").setAttribute("opacity", .25 + .75 * m);
+  $("#s3path").setAttribute("stroke", m > .2 ? "#e8ecff" : "#f2eee5");
+  $("#s3path").setAttribute("stroke-width", 3 + 2 * m);
+  // title: tracking tightens in
+  const title = $("#s3title");
+  const ls = lerp(.5, .05, E.out(inv(198, 244, f)));
+  title.style.letterSpacing = ls + "em";
+  title.style.transform = `translateX(-50%) translateX(${ls * .5}em)`;
+  title.style.opacity = E.out(inv(198, 210, f)) * (1 - E.in(inv(282, 294, f)));
+  // chart counter 100 -> 2, lands on the snare (f250)
+  const C = EV.counter; let idx = 0;
+  for (let i = 0; i < C.frames.length; i++) if (f >= C.frames[i]) idx = i;
+  const num = f < C.frames[0] ? 100 : C.values[idx];
+  $("#s3num").textContent = num;
+  const ce = $("#s3counter");
+  const land = f >= 250 ? spring(f - 250, 300, 18) : 0;
+  const sc = f >= 250 ? 1 + .22 * (1 - land) : 1;
+  const jit = (f >= C.frames[0] && f < 250) ? (rnd(f) - .5) * 10 : 0;
+  ce.style.transform = `translateY(${jit}px) scale(${sc})`;
+  ce.style.opacity = E.out(inv(208, 216, f)) * (1 - E.in(inv(282, 292, f)));
+  ce.style.color = (f >= 250 && f < 256) ? "#ff4a0d" : "#f2eee5";
+  $("#s3cap").textContent = scramble("PLATZ 2 · DEUTSCHE SINGLE-CHARTS · 2020", f, 252, 14, 11);
+  $("#s3cap").style.opacity = 1 - E.in(inv(282, 292, f));
+  // cover card slides in
+  const cp = spring(f - 206, 170, 22);
+  const card = $("#s3card");
+  card.style.transform = `translateX(${(1 - cp) * 760}px) rotate(${lerp(14, -4, cp)}deg) translateY(${Math.sin(f / 22) * 6}px)`;
+  card.style.opacity = (f >= 206 ? 1 : 0) * (1 - E.in(inv(282, 292, f)));
+}
+
+function lightning(f) {
+  let L = 0;
+  for (const [f0, a] of [[300, 1], [304, .75], [309, .9], [331, .35], [338, .2]]) if (f >= f0) L += a * Math.exp(-(f - f0) / 2.4);
+  return clamp(L);
+}
+function updS4(f) {
+  const el = $("#s4"); vis(el, f >= 298 && f < 402); if (f < 298 || f >= 402) return;
+  const L = lightning(f);
+  $("#s4bolt").setAttribute("opacity", f >= 300 ? clamp(L * 1.25) : (f >= 298 ? 1 : 0));
+  $("#s4clouds").style.opacity = .15 + .85 * L;
+  // text revealed by the strikes
+  const lit = clamp(L * 1.6 + E.out(inv(312, 334, f)) * .94);
+  const col = (a) => `rgb(${Math.round(lerp(22, 242, a))},${Math.round(lerp(32, 238, a))},${Math.round(lerp(78, 229, a))})`;
+  $("#s4l1").style.color = col(lit); $("#s4l2").style.color = col(clamp(lit * (f < 304 ? .6 : 1)));
+  const track = lerp(-.005, .03, E.inCubic(inv(352, 398, f)));
+  $("#s4text").style.letterSpacing = track + "em";
+  // #1 slam on the snare
+  const one = $("#s4one");
+  if (f < 350) one.style.opacity = 0;
+  else {
+    const p = spring(f - 350, 320, 20);
+    one.style.opacity = 1;
+    one.style.transform = `scale(${lerp(1.9, 1, p)}) rotate(${lerp(-12, 0, p)}deg)`;
+  }
+  $("#s4cap").innerHTML = `${scramble("ERSTE NUMMER EINS", f, 356, 12, 12)}<br><span class="dim">${scramble("DEUTSCHLAND · JUNI 2021", f, 362, 12, 13)}</span>`;
+  // push-in + white-out into the drop
+  $("#s4cam").style.transform = `scale(${1 + .11 * E.inCubic(inv(340, 400, f))})`;
+  $("#s4white").style.opacity = E.inCubic(inv(384, 396, f));
+  // rain
+  const ctx = S.rainCtx; ctx.clearRect(0, 0, W, H);
+  const speed = 1 + 1.4 * E.inCubic(inv(340, 396, f));
+  ctx.lineWidth = 1.4; ctx.lineCap = "round";
+  for (const r of S.rain) {
+    const y = ((r.y0 + (f - 298) * r.sp * speed) % 1400) - 160;
+    const x = r.x - (y * .22);
+    ctx.strokeStyle = `rgba(200,215,255,${(r.a * (0.6 + 1.6 * L)).toFixed(3)})`;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - r.len * .22, y + r.len); ctx.stroke();
+  }
+}
+
+function updS5(f) {
+  const el = $("#s5"); vis(el, f >= 398 && f < 508); if (f < 398 || f >= 508) return;
+  $("#s5white").style.opacity = 1 - E.out(inv(400, 412, f));
+  // outline draw-on, then fill on the snare
+  S.s5.paths.forEach((p, i) => {
+    if (!p.__len) { p.__len = 4200; p.setAttribute("stroke-dasharray", p.__len); }
+    const dp = E.inOut(inv(400 + i * 3, 426 + i * 3, f));
+    p.setAttribute("stroke-dashoffset", p.__len * (1 - dp));
+    p.setAttribute("fill-opacity", E.out(inv(425, 433, f)));
+  });
+  $("#s5digits").setAttribute("transform", `translate(${-0.45 * (f - 400)} 0)`);
+  // tiles assemble
+  for (const t of S.tiles) {
+    const l = f - t.delay;
+    if (l < 0) { t.el.style.opacity = 0; continue; }
+    const p = spring(l, 210, 23);
+    t.el.style.opacity = clamp(l / 3);
+    const q = 1 - p;
+    t.el.style.transform = `translate3d(${t.dx * q}px, ${t.dy * q}px, ${-600 * q}px) rotateX(${t.rx * q}deg) rotateY(${t.ry * q}deg) rotateZ(${t.rz * q}deg)`;
+  }
+  const settled = f >= 446;
+  $("#s5face").style.opacity = settled ? 1 : 0;
+  $("#s5tiles").style.visibility = settled ? "hidden" : "visible";
+  const floatY = f > 430 ? Math.sin((f - 430) / 26) * 7 : 0;
+  const pulse = f >= 425 ? 1 + .035 * Math.exp(-(f - 425) / 5) : 1;
+  $("#s5card").style.transform = `translateY(${floatY}px) scale(${pulse}) rotateY(${f > 430 ? Math.sin((f - 430) / 40) * 7 : 0}deg)`;
+  $("#s5shadow").style.opacity = E.out(inv(418, 436, f));
+  $("#s5shadow").style.transform = `translateY(${floatY}px)`;
+  // stamp
+  const st = $("#s5stamp");
+  if (f < 425) st.style.opacity = 0;
+  else {
+    const p = spring(f - 425, 330, 19);
+    st.style.opacity = 1;
+    st.style.transform = `translateY(${floatY}px) scale(${lerp(2.3, 1, p)}) rotate(${lerp(-34, -9, p)}deg)`;
+    $("#s5ring").setAttribute("transform", `rotate(${(f - 425) * .9} 140 140)`);
+  }
+  $("#s5cap").textContent = scramble("DEBÜTALBUM — 13.06.2024 — PLATZ 1", f, 431, 16, 14);
+  // whip out left
+  const wp = E.inCubic(inv(486, 504, f));
+  const inner = $("#s5inner");
+  inner.style.transform = `translateX(${-2300 * wp}px)`;
+  setBlur("mb5", 70 * wp, 0);
+  inner.style.filter = wp > .01 ? "url(#mb5)" : "none";
+}
+
+function updS6(f) {
+  const el = $("#s6"); vis(el, f >= 488 && f < 602); if (f < 488 || f >= 602) return;
+  const ip = 1 - E.outCubic(inv(490, 510, f));
+  const inner = $("#s6inner");
+  inner.style.transform = `translateX(${2300 * ip}px)`;
+  setBlur("mb6", 70 * ip, 0);
+  inner.style.filter = ip > .01 ? "url(#mb6)" : "none";
+  $("#s6head").style.opacity = E.out(inv(498, 510, f));
+  $("#s6ghost").style.transform = `translateX(-50%) translateX(${(560 - f) * 1.2}px)`;
+  S.board.forEach((row, r) => {
+    const tp = E.out(inv(500 + r * 3, 512 + r * 3, f));
+    row.th.style.transform = `perspective(400px) rotateY(${(1 - tp) * 90}deg)`;
+    row.th.style.opacity = tp > 0 ? 1 : 0;
+    row.cells.forEach((cell, c) => {
+      const steps = cell.steps;
+      let i = -1;
+      for (let s = 0; s < steps.length; s++) if (f >= steps[s][0]) i = s;
+      const cur = i >= 0 ? steps[i][1] : " ";
+      const prev = i >= 1 ? steps[i - 1][1] : " ";
+      const ph = i >= 0 ? (f - steps[i][0]) / 3 : 1;
+      if (cell.st.textContent !== cur) { cell.st.textContent = cur; }
+      if (ph < 1) {
+        cell.sb.textContent = prev; cell.sft.textContent = prev; cell.sfb.textContent = cur;
+        if (ph < .5) {
+          cell.ft.style.display = "block"; cell.fb.style.display = "none";
+          cell.ft.style.transform = `rotateX(${-180 * ph}deg)`;
+        } else {
+          cell.ft.style.display = "none"; cell.fb.style.display = "block";
+          cell.fb.style.transform = `rotateX(${90 * (1 - (ph - .5) * 2)}deg)`;
+        }
+      } else {
+        cell.sb.textContent = cur; cell.ft.style.display = "none"; cell.fb.style.display = "none";
+      }
+      // highlight the LOUNGE MUSIK row before the flood
+      const hi = r === 3 && f >= 570 + c * .35;
+      cell.ce.classList.toggle("hi", hi);
+    });
+  });
+  // flood from the highlighted row to full frame
+  const fl = $("#s6flood");
+  const fp = E.inOut(inv(582, 598, f));
+  vis(fl, f >= 582);
+  const r3 = { x: 136 + 98, y: 360 + 3 * 98, w: 25 * 62 - 6, h: 80 };
+  fl.style.left = lerp(r3.x, -20, fp) + "px"; fl.style.top = lerp(r3.y, -20, fp) + "px";
+  fl.style.width = lerp(r3.w, W + 40, fp) + "px"; fl.style.height = lerp(r3.h, H + 40, fp) + "px";
+}
+
+function updS7(f) {
+  const el = $("#s7"); vis(el, f >= 596 && f < 704); if (f < 596 || f >= 704) return;
+  const cp = spring(f - 598, 150, 21);
+  $("#s7cut").style.transform = `translateY(${(1 - cp) * 560}px) scale(${lerp(1.08, 1, cp) + .006 * feat("kick", f)})`;
+  [S.s7.l1, S.s7.l2].forEach((letters, li) => letters.forEach((c, i) => {
+    const p = E.out(inv(602 + li * 6 + i * 2, 624 + li * 6 + i * 2, f));
+    c.style.transform = `translateY(${(1 - p) * 110}%) rotate(${(1 - p) * 8}deg)`;
+  }));
+  S.s7.badges.forEach((b, i) => {
+    const f0 = 625 + i * 25;
+    if (f < f0) { b.style.opacity = 0; return; }
+    const p = spring(f - f0, 330, 17);
+    b.style.opacity = 1;
+    b.style.transform = `scale(${lerp(.3, 1, p)}) rotate(${lerp(-10, 0, p)}deg)`;
+    b.style.background = f - f0 < 4 ? "#f2eee5" : "#0b0b0b";
+  });
+  $("#s7flat").style.opacity = 1 - E.inOut(inv(598, 622, f));
+  $("#s7cap").textContent = scramble("ZWEITES STUDIOALBUM · JULI 2026", f, 612, 16, 15);
+  // tilt up to the sky
+  const tp = E.inCubic(inv(686, 702, f));
+  $("#s7inner").style.transform = `translateY(${1250 * tp}px)`;
+  setBlur("mb7", 0, 60 * tp);
+  $("#s7inner").style.filter = tp > .01 ? "url(#mb7)" : "none";
+}
+
+function updS8(f) {
+  const el = $("#s8"); vis(el, f >= 688 && f < 802); if (f < 688 || f >= 802) return;
+  const ip = 1 - E.outCubic(inv(688, 710, f));
+  el.style.transform = `translateY(${-1250 * ip}px)`;
+  setBlur("mb8", 0, 60 * ip);
+  $("#s8inner").style.filter = ip > .01 ? "url(#mb8)" : "none";
+  const t = f - 700;
+  $("#s8sky").style.transform = `translateY(${t * .55}px) scale(${1 + t * .0006})`;
+  $("#s8cut").style.transform = `translateY(${t * .8}px)`;
+  $("#s8rays").style.transform = `rotate(${f * .18}deg)`;
+  [S.s8.l1, S.s8.l2].forEach((letters, li) => letters.forEach((c, i) => {
+    const p = E.out(inv(704 + li * 8 + i * 1.6, 728 + li * 8 + i * 1.6, f));
+    c.style.transform = `translateY(${(1 - p) * 110}%)`;
+  }));
+  $("#s8cap").innerHTML = `<b>${scramble("TFELD — TEMPELHOFER FELD", f, 716, 16, 16)}</b>${scramble("22.08.2026 · HIP-HOP-HEADLINER", f, 724, 16, 17)}`;
+  const fl = E.in(inv(774, 797, f));
+  $("#s8flare").style.opacity = fl;
+  $("#s8flare").style.transform = `scale(${.4 + 1.2 * fl})`;
+}
+
+function updS9(f) {
+  const el = $("#s9"); vis(el, f >= 800); if (f < 800) return;
+  const logo = $("#s9logo");
+  const ls = lerp(.34, .025, E.out(inv(800, 850, f)));
+  logo.style.letterSpacing = ls + "em";
+  logo.style.transform = `translateX(-50%) translateX(${ls / 2}em) scale(${lerp(1.06, 1, E.out(inv(800, 860, f)))})`;
+  const n = S.s9.letters.length;
+  S.s9.letters.forEach((c, i) => {
+    const dd = Math.abs(i - (n - 1) / 2);
+    const p = E.out(inv(800 + dd * 2.2, 818 + dd * 2.2, f));
+    c.style.transform = `translateY(${(1 - p) * 108}%)`;
+  });
+  $("#s9line").style.transform = `scaleX(${E.inOut(inv(812, 834, f))})`;
+  S.s9.words.forEach((w, i) => {
+    const p = E.out(inv(826 + i * 4, 846 + i * 4, f));
+    w.style.opacity = p; w.style.transform = `translateY(${(1 - p) * 24}px)`; w.style.filter = p < .99 ? `blur(${(1 - p) * 10}px)` : "none";
+  });
+  $("#s9small").textContent = scramble("BERLIN · 030 · KREUZBERG", f, 842, 14, 18);
+  $("#s9fan").textContent = scramble("UNOFFIZIELLES FAN-EDIT", f, 846, 12, 19);
+}
+
+function setBlur(id, sx, sy) {
+  let flt = document.getElementById(id);
+  if (!flt) {
+    const svg = document.getElementById("fx") || (() => { const s = svgEl("svg", { id: "fx", width: 0, height: 0, style: "position:absolute" }); document.body.appendChild(s); return s; })();
+    flt = svgEl("filter", { id, x: "-10%", y: "-10%", width: "120%", height: "120%", "color-interpolation-filters": "sRGB" });
+    flt.appendChild(svgEl("feGaussianBlur", { stdDeviation: "0 0" }));
+    svg.appendChild(flt);
+  }
+  flt.firstChild.setAttribute("stdDeviation", `${sx.toFixed(2)} ${sy.toFixed(2)}`);
+}
+
+function updHUD(f) {
+  const ink = HUD_INK.some(([a, b]) => f >= a && f < b);
+  $("#hud").style.setProperty("--hud", ink ? "#0b0b0b" : "#f2eee5");
+  const ss = Math.floor(f / FPS), ff = f % FPS;
+  $("#tc").textContent = f >= 852 ? "ANRUF BEENDET" : `00:00:${String(ss).padStart(2, "0")}:${String(ff).padStart(2, "0")}`;
+  const names = ["kick", "bass", "snare", "hats", "lead"];
+  S.vu.forEach((b, i) => { b.style.height = (3 + 13 * feat(names[i], f)).toFixed(1) + "px"; });
+  // chapter (scrambles on change)
+  let ci = 0; for (let i = 0; i < CHAPTERS.length; i++) if (f >= CHAPTERS[i][0]) ci = i;
+  $("#chapter").textContent = scramble(CHAPTERS[ci][1], f, CHAPTERS[ci][0], 10, 40 + ci);
+  // year odometer
+  let yi = 0; for (let i = 0; i < YEARS.length; i++) if (f >= YEARS[i][0]) yi = i;
+  const from = yi > 0 ? YEARS[yi - 1][1] : YEARS[0][1], to = YEARS[yi][1];
+  const p = E.out(inv(YEARS[yi][0], YEARS[yi][0] + 16, f));
+  const fd = String(from).split("").map(Number), td = String(to).split("").map(Number);
+  S.yearDigits.forEach((strip, i) => { strip.style.transform = `translateY(${-lerp(fd[i], td[i], p) * 30}px)`; });
+  $("#prog i").style.transform = `scaleX(${f / (FRAMES - 1)})`;
+}
+
+let lastF = -1;
+function renderFrame(f) {
+  f = Math.max(0, Math.min(FRAMES - 1, Math.round(f)));
+  updS1(f); updS2(f); updZip(f); updS3(f); updS4(f); updS5(f); updS6(f); updS7(f); updS8(f); updS9(f);
+  updHUD(f);
+  const [sx, sy] = shakeAt(f);
+  $("#world").style.transform = `translate(${sx.toFixed(2)}px, ${sy.toFixed(2)}px)`;
+  $("#flash").style.opacity = flashAt(f).toFixed(3);
+  $("#black").style.opacity = E.inOut(inv(882, 899, f)).toFixed(3);
+  const whiteness = Math.max(flashAt(f), f >= 384 && f < 400 ? E.inCubic(inv(384, 396, f)) : 0,
+    f >= 400 && f < 412 ? 1 - E.out(inv(400, 412, f)) : 0, f >= 774 && f < 800 ? E.in(inv(774, 797, f)) : 0);
+  const vbase = (f >= 400 && f < 497) ? .25 : (f >= 596 && f < 700 ? .7 : 1);
+  $("#vignette").style.opacity = (vbase * (1 - whiteness)).toFixed(3);
+  lastF = f;
+}
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+async function boot() {
+  const render = new URLSearchParams(location.search).has("render");
+  if (render) document.body.classList.add("render");
+  await document.fonts.load('900 100px "ArchivoV"'); await document.fonts.load('italic 100px "Serif"');
+  await document.fonts.load('500 20px "Mono"'); await document.fonts.ready;
+  buildS1(); buildS2(); buildS3(); buildS4(); buildS5(); buildS6(); buildS7(); buildS8(); buildS9(); buildHUD();
+  // wait for every raster to decode
+  const imgs = [...document.querySelectorAll("img")];
+  await Promise.all(imgs.map(i => i.decode().catch(() => {})));
+  await Promise.all(["portrait.jpg", "album_2000.jpg", "sommergewitter.jpg", "mittelmeer.jpg", "gruenewuerfelflow.jpg", "lounge_thumb.jpg"]
+    .map(n => { const i = new Image(); i.src = "assets/img/" + n; return i.decode().catch(() => {}); }));
+  // fit preview
+  const stage = $("#stage");
+  const fit = () => {
+    if (render) { stage.style.transform = "none"; return; }
+    const s = Math.min(innerWidth / W, (innerHeight - 44) / H);
+    stage.style.transform = `translate(${(innerWidth - W * s) / 2}px, ${(innerHeight - 44 - H * s) / 2}px) scale(${s})`;
+  };
+  fit(); addEventListener("resize", fit);
+  window.__seek = (f) => { renderFrame(f); return f; };
+  window.__maTimeline = { duration: FRAMES / FPS, fps: FPS, seek: (t) => renderFrame(t * FPS) };
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  renderFrame(reduce && !render ? 840 : 0);
+  // preview transport (audio-locked)
+  const audio = $("#audio"), btn = $("#play"), scrub = $("#scrub"), uitc = $("#uitc");
+  let playing = false;
+  const tick = () => {
+    if (!playing) return;
+    const f = Math.floor(audio.currentTime * FPS);
+    renderFrame(f); scrub.value = f; uitc.textContent = `${f} / 899`;
+    if (audio.ended || f >= FRAMES - 1) { playing = false; btn.textContent = "▶ Play"; return; }
+    requestAnimationFrame(tick);
+  };
+  btn.onclick = () => {
+    if (playing) { audio.pause(); playing = false; btn.textContent = "▶ Play"; return; }
+    if (lastF >= FRAMES - 1) audio.currentTime = 0;
+    audio.play(); playing = true; btn.textContent = "❚❚ Pause"; tick();
+  };
+  scrub.oninput = () => { const f = +scrub.value; audio.currentTime = f / FPS; renderFrame(f); uitc.textContent = `${f} / 899`; };
+  addEventListener("keydown", e => {
+    if (e.key === " ") { btn.click(); e.preventDefault(); }
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const f = clamp(lastF + (e.key === "ArrowRight" ? 1 : -1), 0, FRAMES - 1); audio.currentTime = f / FPS; renderFrame(f); scrub.value = f; uitc.textContent = `${f} / 899`; }
+  });
+  window.__ready = true;
+}
+boot();
+</script>
+</body>
+</html>
