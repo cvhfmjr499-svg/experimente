@@ -1,0 +1,69 @@
+{
+ "s2": 138,
+ "s3": 249,
+ "s4": 358,
+ "s5": 439,
+ "s7": [
+  619,
+  640,
+  658
+ ],
+ "scenes": {
+  "s2": {
+   "song": "hauseingang",
+   "start_s": 19.249,
+   "bpm": 166.7,
+   "stretch": 1.0797,
+   "align_ms": 2.7
+  },
+  "s3": {
+   "song": "airwaves",
+   "start_s": 3.158,
+   "bpm": 132.5,
+   "stretch": 1.0867,
+   "align_ms": 2.7
+  },
+  "s4": {
+   "song": "sommergewitter",
+   "start_s": 8.777,
+   "bpm": 184.6,
+   "stretch": 0.9752,
+   "align_ms": 0.0
+  },
+  "s5": {
+   "song": "mittelmeer",
+   "start_s": 14.141,
+   "bpm": 178.2,
+   "stretch": 1.0101,
+   "align_ms": 0.0
+  },
+  "s6": {
+   "song": "shababes_im_vip",
+   "start_s": 3.738,
+   "bpm": 136.0,
+   "stretch": 1.0588,
+   "align_ms": 2.7
+  },
+  "s7": {
+   "song": "goldrichtig",
+   "start_s": 4.389,
+   "bpm": 178.2,
+   "stretch": 1.0101,
+   "align_ms": 0.0
+  },
+  "s8": {
+   "song": "tourlife",
+   "start_s": 22.152,
+   "bpm": 120.2,
+   "stretch": 1.0,
+   "align_ms": 0.0
+  },
+  "s9": {
+   "song": "berlin_calling",
+   "start_s": 1.242,
+   "bpm": 172.3,
+   "stretch": 1.0,
+   "align_ms": 0.0
+  }
+ }
+}

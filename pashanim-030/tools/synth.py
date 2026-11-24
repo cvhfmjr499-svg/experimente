@@ -16,6 +16,11 @@ import numpy as np
 import scipy.signal as sg
 from scipy.io import wavfile
 
+
+def sf_read(path):
+    sr, x = wavfile.read(path)
+    return x.astype(np.float64), sr
+
 SR = 48000
 BPM = 144
 FPS = 60
@@ -28,6 +33,13 @@ L = N + SR * 3  # room for tails, trimmed at the end
 F2S = SR // FPS  # 800 samples per frame
 
 rng = np.random.default_rng(30)
+
+# When tools/medley.py has built a bed from his songs, the synthesized music
+# stems are muted and only the sound design is kept, re-timed to the accents.
+import os  # noqa: E402
+BED_PATH, ACC_PATH = "audio/music_bed.wav", "assets/data/accents.json"
+USE_BED = os.path.exists(BED_PATH) and os.path.exists(ACC_PATH)
+ACC = json.load(open(ACC_PATH)) if USE_BED else {"s2": 150, "s3": 250, "s4": 350, "s5": 425, "s7": [625, 650, 675]}
 
 
 def fr(f):
@@ -387,7 +399,8 @@ for b in (4, 5, 6):
         else:
             place("hats", hat(lvl), bar_s(b, s + sw), pan=0.3)
 place("sfx", crash(0.55), bar_s(4), send=0.3)
-place("sfx", crash(0.3), bar_s(7), send=0.4)
+if not USE_BED:
+    place("sfx", crash(0.3), bar_s(7), send=0.4)
 place("sfx", crash(0.6), bar_s(8), send=0.4)
 
 # --- 808
@@ -431,11 +444,11 @@ for f, d in [(0, "0"), (25, "3"), (50, "0")]:
 place("sfx", whoosh(34 / 60, 200, 9000, 0.32, rising=True, pan_from=0.0, pan_to=0.0), fr(66), send=0.2)
 place("sfx", impact(0.35, dur=0.6, f0=80, f1=40), fr(100))
 place("sfx", zip_sound(0.2, 0.3), fr(186), pan=-0.2, send=0.2)
-place("sfx", static_burst(0.45, 0.42), fr(200), pan=0.1, send=0.15)
+place("sfx", static_burst(0.45, 0.3 if USE_BED else 0.42), fr(200), pan=0.1, send=0.15)
 
 # chart counter #100 -> #2 (decelerating), lands on the snare at f250
 counter_vals = [100, 86, 71, 55, 42, 31, 22, 15, 10, 7, 5, 4, 3, 2]
-counter_frames = [round(222 + (250 - 222) * (1 - (1 - i / (len(counter_vals) - 1)) ** 1.8)) for i in range(len(counter_vals))]
+counter_frames = [round(222 + (ACC["s3"] - 222) * (1 - (1 - i / (len(counter_vals) - 1)) ** 1.8)) for i in range(len(counter_vals))]
 for i, f in enumerate(counter_frames):
     place("sfx", tick(0.28 if i < len(counter_frames) - 1 else 0.5, 3600 + 60 * i), fr(f), pan=-0.3)
 
@@ -443,12 +456,12 @@ place("sfx", tv_filter(noise(fr(14)), "bandpass", lambda p: (2000 + 4000 * p, 90
 place("sfx", thunder(0.9), fr(300), send=0.35)
 place("sfx", thunder(0.28, 0.9), fr(304), pan=0.4)
 place("sfx", thunder(0.22, 0.9), fr(309), pan=-0.4)
-place("sfx", impact(0.45, dur=1.0, f0=120, f1=45), fr(350), send=0.2)
+place("sfx", impact(0.45, dur=1.0, f0=120, f1=45), fr(ACC["s4"]), send=0.2)
 place("sfx", riser(1.0, 0.36), fr(340), send=0.25)
 place("sfx", impact(1.0, dur=2.4), fr(400), send=0.4)
 for i, f in enumerate([402, 408, 414, 420]):
     place("sfx", whoosh(0.16, 900, 7000, 0.12, rising=False, pan_from=-0.7 + i * 0.45, pan_to=-0.5 + i * 0.45), fr(f))
-place("sfx", impact(0.5, dur=0.5, f0=140, f1=60) + 0, fr(425))
+place("sfx", impact(0.5, dur=0.5, f0=140, f1=60), fr(ACC["s5"]))
 place("sfx", whoosh(0.22, 400, 8000, 0.3, rising=False, pan_from=0.8, pan_to=-0.8), fr(490), send=0.15)
 
 # split-flap board schedule (shared with the composition)
@@ -480,10 +493,10 @@ for r, (yr, title, pk) in enumerate(BOARD_ROWS):
     board.append({"text": text, "cells": row})
 # clatter: one click per flip, slightly humanized
 for f in flips_all:
-    place("sfx", flap_click(0.05), fr(f) + int(rng.integers(0, 600)), pan=float(rng.uniform(-0.6, 0.6)))
+    place("sfx", flap_click(0.03 if USE_BED else 0.05), fr(f) + int(rng.integers(0, 600)), pan=float(rng.uniform(-0.6, 0.6)))
 
 place("sfx", whoosh(0.3, 150, 2500, 0.22, rising=True), fr(582), send=0.3)
-for f, p in [(625, 988), (650, 1175), (675, 1319)]:
+for f, p in zip(ACC["s7"], (988, 1175, 1319)):
     place("sfx", pop(p, 0.28), fr(f), pan=(f - 650) / 60, send=0.2)
 place("sfx", whoosh(0.24, 300, 9000, 0.32, rising=False, pan_from=0, pan_to=0), fr(686), send=0.2)
 rev_sh = pad_chord([76, 79, 83, 88], 0.4, 6000, level=0.3, attack=0.38, release=0.02)
@@ -491,7 +504,7 @@ place("sfx", rev_sh, fr(690), send=0.8)
 place("sfx", riser(0.55, 0.3), fr(767), send=0.2)
 place("sfx", impact(1.0, dur=2.6, f0=100, f1=30), fr(800), send=0.5)
 # hang-up: German busy tone (425 Hz) twice, phone band-limited
-for f in (848, 870):
+for f in ((852, 874) if USE_BED else (848, 870)):
     n = int(0.16 * SR)
     beep = bp(np.sin(2 * np.pi * 425 * tt(n)), 300, 3400)
     place("dtmf", fade(beep * 0.3, 0.004, 0.02), fr(f), send=0.15)
@@ -522,7 +535,18 @@ verb = hp(verb, 220)
 
 GAINS = {"kick": 0.80, "snare": 0.80, "hats": 0.42, "bass": 0.40, "pad": 0.62, "lead": 0.52,
          "sfx": 0.50, "dtmf": 0.85}
-mix = sum(st[k] * g for k, g in GAINS.items()) + verb * 0.28
+if USE_BED:
+    for k in ("kick", "snare", "hats", "bass", "pad", "lead"):
+        GAINS[k] = 0.0
+    GAINS["sfx"] = 0.42
+    GAINS["dtmf"] = 0.5
+    bed, bsr = sf_read(BED_PATH)
+    assert bsr == SR
+    bed_full = np.zeros((L, 2))
+    bed_full[: len(bed)] = bed[:L]
+mix = sum(st[k] * g for k, g in GAINS.items()) + verb * (0.18 if USE_BED else 0.28)
+if USE_BED:
+    mix = mix + bed_full * 1.0
 mix = hp(mix, 28)
 # look-ahead peak limiter (keeps transients clean instead of saturating)
 from scipy.ndimage import maximum_filter1d
@@ -531,7 +555,7 @@ target_rms_db = -14.5
 mix *= 10 ** (target_rms_db / 20) / np.sqrt((mix ** 2).mean())
 look = int(0.004 * SR)
 pk = maximum_filter1d(np.abs(mix).max(1), size=2 * look + 1)
-thr = 0.70  # leaves headroom for AAC overshoot (true-peak checked after encoding)
+thr = 0.62  # leaves headroom for AAC overshoot (true-peak checked after encoding)
 g = np.minimum(1.0, thr / np.maximum(pk, 1e-9))
 rel = np.exp(-1 / (0.09 * SR))
 gs = np.empty_like(g)
@@ -540,7 +564,7 @@ for i in range(len(g)):  # attack instant (look-ahead covers it), smooth release
     cur = g[i] if g[i] < cur else g[i] + (cur - g[i]) * rel
     gs[i] = cur
 mix *= gs[:, None]
-mix = np.clip(mix, -0.79, 0.79)
+mix = np.clip(mix, -0.7, 0.7)
 mix[-int(0.08 * SR):] *= np.linspace(1, 0, int(0.08 * SR))[:, None]
 wavfile.write("audio/score.wav", SR, mix.astype(np.float32))
 rms = np.sqrt((mix ** 2).mean())
@@ -553,11 +577,23 @@ def frame_env(x):
     return (e / (e.max() + 1e-9)).round(4).tolist()
 
 
-features = {k: frame_env(st[k]) for k in ("kick", "snare", "hats", "bass", "pad", "lead", "sfx")}
+def band_env(x, lo, hi):
+    y = sg.sosfilt(sg.butter(4, [lo, hi], "bandpass", fs=SR, output="sos"), x[:N].mean(1))
+    e = np.sqrt((y.reshape(FRAMES, F2S) ** 2).mean(1))
+    return (e / (e.max() + 1e-9)).round(4).tolist()
+
+
+if USE_BED:
+    features = {"kick": band_env(mix, 30, 120), "bass": band_env(mix, 60, 250), "snare": band_env(mix, 1500, 5000),
+                "hats": band_env(mix, 6000, 16000), "lead": band_env(mix, 300, 2000), "pad": band_env(mix, 300, 2000),
+                "sfx": frame_env(st["sfx"])}
+else:
+    features = {k: frame_env(st[k]) for k in ("kick", "snare", "hats", "bass", "pad", "lead", "sfx")}
 features["mix"] = frame_env(mix)
 events = {
     "fps": FPS, "frames": FRAMES, "bpm": BPM, "beatFrames": 25,
     "board": board, "counter": {"values": counter_vals, "frames": counter_frames},
+    "acc": {k: ACC[k] for k in ("s2", "s3", "s4", "s5", "s7")},
     "features": features,
 }
 with open("assets/data/events.json", "w") as f:

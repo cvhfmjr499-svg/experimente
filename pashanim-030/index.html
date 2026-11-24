@@ -453,10 +453,12 @@ function splitLetters(el) {
 }
 
 /* ---------- shared schedule ---------- */
-const FLASHES = [[0, .30, 5], [25, .30, 5], [50, .34, 5], [150, .16, 4], [250, .22, 5], [300, 1, 4], [304, .65, 4],
-  [309, .8, 5], [350, .38, 5], [425, .22, 4], [625, .12, 3], [650, .12, 3], [675, .12, 3]];
-const SHAKES = [[0, 9], [25, 9], [50, 11], [100, 5], [150, 6], [250, 6], [300, 15], [309, 6], [350, 12], [400, 16],
-  [425, 9], [625, 4], [650, 4], [675, 5], [800, 13]];
+// accents = real snares/beats of the song in each scene (see tools/medley.py)
+const ACC = Object.assign({ s2: 150, s3: 250, s4: 350, s5: 425, s7: [625, 650, 675] }, EV.acc || {});
+const FLASHES = [[0, .30, 5], [25, .30, 5], [50, .34, 5], [ACC.s2, .16, 4], [ACC.s3, .22, 5], [300, 1, 4], [304, .65, 4],
+  [309, .8, 5], [ACC.s4, .38, 5], [ACC.s5, .22, 4], [ACC.s7[0], .12, 3], [ACC.s7[1], .12, 3], [ACC.s7[2], .12, 3]];
+const SHAKES = [[0, 9], [25, 9], [50, 11], [100, 5], [ACC.s2, 6], [ACC.s3, 6], [300, 15], [309, 6], [ACC.s4, 12], [400, 16],
+  [ACC.s5, 9], [ACC.s7[0], 4], [ACC.s7[1], 4], [ACC.s7[2], 5], [800, 13]];
 const CHAPTERS = [[0, "01 — 030 BERLIN"], [100, "02 — CAN DAVID BAYRAM"], [200, "03 — AIRWAVES"], [300, "04 — SOMMERGEWITTER"],
   [400, "05 — 2000"], [500, "06 — NR. 1"], [600, "07 — LOUNGE MUSIK"], [700, "08 — TEMPELHOFER FELD"], [800, "09 — PASHANIM"]];
 const YEARS = [[0, 2000], [204, 2020], [304, 2021], [404, 2024], [504, 2025], [604, 2026]];
@@ -739,7 +741,7 @@ function updS2(f) {
   // background glow pulses with the kick
   $("#s2bg").style.transform = `scale(${1 + .025 * feat("kick", f)})`;
   // name: letters rise, then the width axis opens on the snare (f150)
-  const wd = kf(f, [[100, 68], [148, 74, E.lin], [166, 118, E.out]]);
+  const wd = kf(f, [[100, 68], [ACC.s2 - 2, 74, E.lin], [ACC.s2 + 16, 118, E.out]]);
   const tx = kf(f, [[100, 24], [206, -36, E.lin]]);
   [["#s2back", S.s2.back], ["#s2front", S.s2.front]].forEach(([sel, letters]) => {
     const t = $(sel);
@@ -801,13 +803,13 @@ function updS3(f) {
   const num = f < C.frames[0] ? 100 : C.values[idx];
   $("#s3num").textContent = num;
   const ce = $("#s3counter");
-  const land = f >= 250 ? spring(f - 250, 300, 18) : 0;
-  const sc = f >= 250 ? 1 + .22 * (1 - land) : 1;
-  const jit = (f >= C.frames[0] && f < 250) ? (rnd(f) - .5) * 10 : 0;
+  const land = f >= ACC.s3 ? spring(f - ACC.s3, 300, 18) : 0;
+  const sc = f >= ACC.s3 ? 1 + .22 * (1 - land) : 1;
+  const jit = (f >= C.frames[0] && f < ACC.s3) ? (rnd(f) - .5) * 10 : 0;
   ce.style.transform = `translateY(${jit}px) scale(${sc})`;
   ce.style.opacity = E.out(inv(208, 216, f)) * (1 - E.in(inv(282, 292, f)));
-  ce.style.color = (f >= 250 && f < 256) ? "#ff4a0d" : "#f2eee5";
-  $("#s3cap").textContent = scramble("PLATZ 2 · DEUTSCHE SINGLE-CHARTS · 2020", f, 252, 14, 11);
+  ce.style.color = (f >= ACC.s3 && f < ACC.s3 + 6) ? "#ff4a0d" : "#f2eee5";
+  $("#s3cap").textContent = scramble("PLATZ 2 · DEUTSCHE SINGLE-CHARTS · 2020", f, ACC.s3 + 2, 14, 11);
   $("#s3cap").style.opacity = 1 - E.in(inv(282, 292, f));
   // cover card slides in
   const cp = spring(f - 206, 170, 22);
@@ -834,13 +836,13 @@ function updS4(f) {
   $("#s4text").style.letterSpacing = track + "em";
   // #1 slam on the snare
   const one = $("#s4one");
-  if (f < 350) one.style.opacity = 0;
+  if (f < ACC.s4) one.style.opacity = 0;
   else {
-    const p = spring(f - 350, 320, 20);
+    const p = spring(f - ACC.s4, 320, 20);
     one.style.opacity = 1;
     one.style.transform = `scale(${lerp(1.9, 1, p)}) rotate(${lerp(-12, 0, p)}deg)`;
   }
-  $("#s4cap").innerHTML = `${scramble("ERSTE NUMMER EINS", f, 356, 12, 12)}<br><span class="dim">${scramble("DEUTSCHLAND · JUNI 2021", f, 362, 12, 13)}</span>`;
+  $("#s4cap").innerHTML = `${scramble("ERSTE NUMMER EINS", f, ACC.s4 + 6, 12, 12)}<br><span class="dim">${scramble("DEUTSCHLAND · JUNI 2021", f, ACC.s4 + 12, 12, 13)}</span>`;
   // push-in + white-out into the drop
   $("#s4cam").style.transform = `scale(${1 + .11 * E.inCubic(inv(340, 400, f))})`;
   $("#s4white").style.opacity = E.inCubic(inv(384, 396, f));
@@ -862,9 +864,9 @@ function updS5(f) {
   // outline draw-on, then fill on the snare
   S.s5.paths.forEach((p, i) => {
     if (!p.__len) { p.__len = 4200; p.setAttribute("stroke-dasharray", p.__len); }
-    const dp = E.inOut(inv(400 + i * 3, 426 + i * 3, f));
+    const dp = E.inOut(inv(400 + i * 3, ACC.s5 - 6 + i * 3, f));
     p.setAttribute("stroke-dashoffset", p.__len * (1 - dp));
-    p.setAttribute("fill-opacity", E.out(inv(425, 433, f)));
+    p.setAttribute("fill-opacity", E.out(inv(ACC.s5, ACC.s5 + 8, f)));
   });
   $("#s5digits").setAttribute("transform", `translate(${-0.45 * (f - 400)} 0)`);
   // tiles assemble
@@ -880,20 +882,20 @@ function updS5(f) {
   $("#s5face").style.opacity = settled ? 1 : 0;
   $("#s5tiles").style.visibility = settled ? "hidden" : "visible";
   const floatY = f > 430 ? Math.sin((f - 430) / 26) * 7 : 0;
-  const pulse = f >= 425 ? 1 + .035 * Math.exp(-(f - 425) / 5) : 1;
+  const pulse = f >= ACC.s5 ? 1 + .035 * Math.exp(-(f - ACC.s5) / 5) : 1;
   $("#s5card").style.transform = `translateY(${floatY}px) scale(${pulse}) rotateY(${f > 430 ? Math.sin((f - 430) / 40) * 7 : 0}deg)`;
   $("#s5shadow").style.opacity = E.out(inv(418, 436, f));
   $("#s5shadow").style.transform = `translateY(${floatY}px)`;
   // stamp
   const st = $("#s5stamp");
-  if (f < 425) st.style.opacity = 0;
+  if (f < ACC.s5) st.style.opacity = 0;
   else {
-    const p = spring(f - 425, 330, 19);
+    const p = spring(f - ACC.s5, 330, 19);
     st.style.opacity = 1;
     st.style.transform = `translateY(${floatY}px) scale(${lerp(2.3, 1, p)}) rotate(${lerp(-34, -9, p)}deg)`;
-    $("#s5ring").setAttribute("transform", `rotate(${(f - 425) * .9} 140 140)`);
+    $("#s5ring").setAttribute("transform", `rotate(${(f - ACC.s5) * .9} 140 140)`);
   }
-  $("#s5cap").textContent = scramble("DEBÜTALBUM — 13.06.2024 — PLATZ 1", f, 431, 16, 14);
+  $("#s5cap").textContent = scramble("DEBÜTALBUM — 13.06.2024 — PLATZ 1", f, ACC.s5 + 6, 16, 14);
   // whip out left
   const wp = E.inCubic(inv(486, 504, f));
   const inner = $("#s5inner");
@@ -958,7 +960,7 @@ function updS7(f) {
     c.style.transform = `translateY(${(1 - p) * 110}%) rotate(${(1 - p) * 8}deg)`;
   }));
   S.s7.badges.forEach((b, i) => {
-    const f0 = 625 + i * 25;
+    const f0 = ACC.s7[i];
     if (f < f0) { b.style.opacity = 0; return; }
     const p = spring(f - f0, 330, 17);
     b.style.opacity = 1;

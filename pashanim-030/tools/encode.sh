@@ -5,7 +5,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p out
-HITS="between(n,300,304)+between(n,350,352)+between(n,400,404)+between(n,425,427)+between(n,800,803)"
+HITS="between(n,300,304)+between(n,358,360)+between(n,400,404)+between(n,439,441)+between(n,800,803)"
 ffmpeg -hide_banner -loglevel error -y \
   -framerate 60 -i frames/f%04d.png -i audio/score.wav \
   -filter_complex "[0:v]format=gbrp,rgbashift=rh=-6:bh=6:enable='${HITS}',scale=out_color_matrix=bt709:out_range=tv,format=yuv444p,noise=c0s=5:c0f=t+u,format=yuv420p[v]" \
