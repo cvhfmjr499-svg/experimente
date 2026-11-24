@@ -55,7 +55,8 @@ def tt(n):
     return np.arange(n, dtype=np.float64) / SR
 
 
-STEMS = ["kick", "snare", "hats", "bass", "pad", "lead", "sfx", "dtmf", "verb_send"]
+STEMS = ["kick", "snare", "hats", "bass", "pad", "lead", "sfx", "dtmf", "verb_send", "verb_send_music"]
+MUSIC_STEMS = ("kick", "snare", "hats", "bass", "pad", "lead")
 st = {k: np.zeros((L, 2), np.float64) for k in STEMS}
 
 
@@ -73,7 +74,9 @@ def place(stem, sig, start, gain=1.0, pan=0.0, send=0.0):
         return
     st[stem][s:e] += sig[: e - s] * gain
     if send:
-        st["verb_send"][s:e] += sig[: e - s] * gain * send
+        # the synthesized score reverbs on its own bus, so it vanishes completely under his songs
+        bus = "verb_send_music" if stem in MUSIC_STEMS else "verb_send"
+        st[bus][s:e] += sig[: e - s] * gain * send
 
 
 def fade(sig, fin=0.002, fout=0.01):
@@ -500,8 +503,9 @@ place("sfx", whoosh(0.3, 150, 2500, 0.22, rising=True), fr(582), send=0.3)
 for f, p in zip(ACC["s7"], (988, 1175, 1319)):
     place("sfx", pop(p, 0.28), fr(f), pan=(f - 650) / 60, send=0.2)
 place("sfx", whoosh(0.24, 300, 9000, 0.32, rising=False, pan_from=0, pan_to=0), fr(686), send=0.2)
-rev_sh = pad_chord([76, 79, 83, 88], 0.4, 6000, level=0.3, attack=0.38, release=0.02)
-place("sfx", rev_sh, fr(690), send=0.8)
+if not USE_BED:  # tonal shimmer chord belongs to the synthesized score
+    rev_sh = pad_chord([76, 79, 83, 88], 0.4, 6000, level=0.3, attack=0.38, release=0.02)
+    place("sfx", rev_sh, fr(690), send=0.8)
 place("sfx", riser(0.55, 0.3), fr(767), send=0.2)
 place("sfx", impact(1.0 * HIT, dur=2.6, f0=100, f1=30), fr(800), send=0.5)
 # hang-up: German busy tone (425 Hz) twice, phone band-limited
@@ -531,7 +535,8 @@ it = tt(irn)
 ir = np.stack([lp(noise(irn), 6500), lp(noise(irn), 6500)], 1) * np.exp(-it / 0.36)[:, None]
 ir[: int(0.012 * SR)] = 0
 ir /= np.sqrt((ir ** 2).sum(0))
-verb = np.stack([sg.fftconvolve(st["verb_send"][:, c], ir[:, c])[:L] for c in range(2)], 1)
+send_bus = st["verb_send"] + (0 if USE_BED else st["verb_send_music"])
+verb = np.stack([sg.fftconvolve(send_bus[:, c], ir[:, c])[:L] for c in range(2)], 1)
 verb = hp(verb, 220)
 
 GAINS = {"kick": 0.80, "snare": 0.80, "hats": 0.42, "bass": 0.40, "pad": 0.62, "lead": 0.52,
